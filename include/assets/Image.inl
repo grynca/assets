@@ -122,7 +122,7 @@ namespace grynca {
 
     inline GLenum Image::getGLFormat() const {
         assert(!isNull());
-        GLenum gl_format;
+        GLenum gl_format = 0;
         switch (getDepth()) {
             case 1:
                 gl_format = GL_LUMINANCE;
@@ -143,7 +143,7 @@ namespace grynca {
             default:
                 std::cerr << "[Image::getGLFormat] Unknown image format (bytes per pixel)." << std::endl;
         }
-        return 0;
+        return gl_format;
     }
 
     inline bool Image::convertTo(GLenum gl_format) {
