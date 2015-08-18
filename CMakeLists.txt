@@ -13,7 +13,7 @@ include_directories(c:/DEV/libs/mingw/glew-1.12.0/include/)
 link_directories(c:/DEV/libs/mingw/glew-1.12.0/lib/)
 #sdl
 include_directories(c:/DEV/libs/mingw/SDL2-2.0.3/include/)
-link_directories(c:/DEV/libs/mingw/SDL2-2.0.3/build/.libs/)
+link_directories(c:/DEV/libs/mingw/SDL2-2.0.3/build/.libs/) 
 #sdl-image
 include_directories(c:/DEV/libs/mingw/SDL2_image-2.0.0/)
 link_directories(c:/DEV/libs/mingw/SDL2_image-2.0.0/.libs/)
@@ -25,7 +25,7 @@ set(LIBS "-lglew32 -lopengl32 -lglu32
           -lmingw32 -lSDL2main -lSDL2 -lSDL2_image")
 
 set(SOURCE_FILES
-    src/main.cpp
+    test/main.cpp
     include/assets/Image.h
     include/assets/Image.inl
     )

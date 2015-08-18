@@ -5,7 +5,7 @@ using namespace std;
 using namespace grynca;
 
 int main(int argc, char* argv[]) {
-    Image i("yoda.jpg");
+    Image i("data/yoda.jpg");
     std::cout << i.getSize() << std::endl;
 
     for (uint32_t x=0; x<100; ++x)
