@@ -2,17 +2,19 @@
 #define IMAGE_H
 
 #include "types/containers/fast_vector.h"
+#include "types/Path.h"
 #include "types/RefPtr.h"
 #include "maths/shapes/ARect.h"
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include <GL/glew.h>
 #include <stdint.h>
 #include <string>
+#include <bitset>
 
 namespace grynca {
 
-    struct Pixel {
-        friend std::ostream& operator <<(std::ostream& os, const Pixel& p);
+    struct Color {
+        friend std::ostream& operator <<(std::ostream& os, const Color & p);
 
         uint8_t r;
         uint8_t g;
@@ -26,11 +28,12 @@ namespace grynca {
 
         Image();    // dummy image
         Image(uint32_t width, uint32_t height, GLenum gl_format);   // empty image
-        Image(const std::string& filepath);
+        Image(const Path& filepath);
         Image(Image&& i);
-        ~Image();
 
-        void load(const std::string& filepath);
+        Image& operator=(Image&& i);
+
+        void load(const Path& filepath);
 
         bool isNull()const;
 
@@ -43,25 +46,34 @@ namespace grynca {
         uint8_t const* getDataPtr() const;
         uint8_t* getDataPtr();
 
-        fast_vector<uint8_t> getRectData(const ARect& subrect);     // copies data out
+        fast_vector<uint8_t> getRectData(const ARect& subrect);
+        void copyRectOut(const ARect& subrect, void* data_out);
 
         GLenum getGLFormat() const;
         bool convertTo(GLenum gl_format);
-        bool saveToPNG(const std::string& filepath);
+        bool saveToPNG(const Path& filepath);
 
         SDL_Surface* getInternal();
 
-        Pixel getPixel(uint32_t x, uint32_t y);
-        void setPixel(uint32_t x, uint32_t y, Pixel pixel);
+        Color getPixel(uint32_t x, uint32_t y);
+        void setPixel(uint32_t x, uint32_t y, Color color);
+
+        void fillWithColor(Color color);
+
+        static uint32_t getFormatDepth(GLenum format);
     private:
+        friend class RefPtr<Image>;
+
         Image(const Image&) = delete;
         Image& operator=(const Image&) = delete;
+        ~Image();
 
-        void setImage_(const std::string& filepath);
+        void setImage_(const Path& filepath);
         SDL_Palette* createGreyscalePalette_();
         uint32_t GLFormat2SDLFormat_(GLenum gl_format);
 
         SDL_Surface* surface_;
+        std::bitset<1> flags_;      // 0.. gl_alpha
     };
 }
 

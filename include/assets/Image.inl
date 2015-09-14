@@ -1,5 +1,5 @@
 #include "Image.h"
-#include <SDL_image.h>
+#include <SDL2/SDL_image.h>
 #include <sstream>
 #include <cassert>
 #include <iostream>
@@ -36,9 +36,12 @@ namespace grynca {
             SDL_Palette * p = createGreyscalePalette_();
             SDL_SetPixelFormatPalette(surface_->format, p);
         }
+        if (gl_format == GL_ALPHA) {
+            flags_[0] = true;
+        }
     }
 
-    inline Image::Image(const std::string& filepath)
+    inline Image::Image(const Path& filepath)
      : Image()
     {
         setImage_(filepath);
@@ -54,7 +57,13 @@ namespace grynca {
             SDL_FreeSurface(surface_);
     }
 
-    inline void Image::load(const std::string& filepath) {
+    inline Image& Image::operator=(Image&& i) {
+        surface_ = i.surface_;
+        i.surface_ = NULL;
+        return *this;
+    }
+
+    inline void Image::load(const Path& filepath) {
         setImage_(filepath);
     }
 
@@ -97,6 +106,14 @@ namespace grynca {
     }
 
     inline fast_vector<uint8_t> Image::getRectData(const ARect& subrect) {
+        fast_vector<uint8_t> data;
+        uint32_t data_size = (uint32_t)subrect.getWidth()*(uint32_t)subrect.getHeight();
+        data.resize(data_size);
+        copyRectOut(subrect, &data[0]);
+        return data;
+    }
+
+    inline void Image::copyRectOut(const ARect& subrect, void* data_out) {
         assert(!isNull());
         // checks if sub region fits into image
         assert(subrect.getX() >= 0 && subrect.getY() >= 0);
@@ -104,10 +121,9 @@ namespace grynca {
         assert(subrect.getRightBot().getX() <= getWidth());
         assert(subrect.getRightBot().getY() <= getHeight());
 
-        fast_vector<uint8_t> data;
         uint32_t img_pitch = getPitch();
         uint32_t sub_pitch = uint32_t(subrect.getWidth() * getDepth());
-        uint8_t *dest = &data[0];
+        uint8_t *dest = (uint8_t*)data_out;
         uint8_t *src = (uint8_t *) getDataPtr();
         uint32_t src_pos = uint32_t(subrect.getY() * getPitch() + subrect.getX() * getDepth());
         uint32_t dst_pos = 0;
@@ -116,8 +132,6 @@ namespace grynca {
             dst_pos += sub_pitch;
             src_pos += img_pitch;
         }
-
-        return data;
     }
 
     inline GLenum Image::getGLFormat() const {
@@ -125,7 +139,10 @@ namespace grynca {
         GLenum gl_format = 0;
         switch (getDepth()) {
             case 1:
-                gl_format = GL_LUMINANCE;
+                if (flags_[0])
+                    gl_format = GL_ALPHA;
+                else
+                    gl_format = GL_LUMINANCE;
                 break;
             case 3:
                 if (surface_->format->Rshift < surface_->format->Bshift)
@@ -173,9 +190,10 @@ namespace grynca {
         return new_surface!=NULL;
     }
 
-    inline bool Image::saveToPNG(const std::string& filepath) {
+    inline bool Image::saveToPNG(const Path& filepath) {
         assert(!isNull());
-        bool rslt = IMG_SavePNG(surface_, filepath.c_str());
+        bool rslt = (IMG_SavePNG(surface_, filepath.getPath().c_str()) != -1);
+
         if (!rslt) {
             std::cerr << IMG_GetError() << std::endl;
         }
@@ -186,13 +204,13 @@ namespace grynca {
         return surface_;
     }
 
-    inline Pixel Image::getPixel(uint32_t x, uint32_t y) {
+    inline Color Image::getPixel(uint32_t x, uint32_t y) {
         assert(x < getWidth() && y<getHeight());
         uint32_t pixel = *(uint32_t*)&getDataPtr()[getPitch()*y + getDepth()*x];
 
         SDL_PixelFormat *f = surface_->format;
         uint32_t tmp;
-        Pixel p;
+        Color p;
         tmp = pixel & f->Rmask;
         tmp = tmp >> f->Rshift;
         tmp = tmp << f->Rloss;
@@ -216,18 +234,45 @@ namespace grynca {
         return p;
     }
 
-    inline void Image::setPixel(uint32_t x, uint32_t y, Pixel pixel) {
+    inline void Image::setPixel(uint32_t x, uint32_t y, Color color) {
         assert(x < getWidth() && y<getHeight());
         uint32_t& p = *(uint32_t*)&getDataPtr()[getPitch()*y + getDepth()*x];
         SDL_PixelFormat *f = surface_->format;
-        p =     (uint32_t)pixel.r << f->Rshift
-              | (uint32_t)pixel.g << f->Gshift
-              | (uint32_t)pixel.b << f->Bshift
-              | (uint32_t)pixel.a << f->Ashift;
+        p =     (uint32_t)color.r << f->Rshift
+              | (uint32_t)color.g << f->Gshift
+              | (uint32_t)color.b << f->Bshift
+              | (uint32_t)color.a << f->Ashift;
     }
 
-    inline void Image::setImage_(const std::string& filepath) {
-        surface_ = IMG_Load(filepath.c_str());
+    inline void Image::fillWithColor(Color color) {
+        assert(!isNull());
+        for (uint32_t x=0; x<getWidth(); ++x) {
+            for (uint32_t y=0; y<getHeight(); ++y) {
+                setPixel(x, y, color);
+            }
+        }
+    }
+
+    inline uint32_t Image::getFormatDepth(GLenum format) {
+        //static
+        switch (format) {
+            case GL_LUMINANCE:
+            case GL_ALPHA:
+                return 1;
+            case GL_RGB:
+            case GL_BGR:
+                return 3;
+            case GL_RGBA:
+            case GL_BGRA:
+                return 4;
+            default:
+                ASSERT(false, "Unknown GL format");
+                return uint32_t(-1);
+        }
+    }
+
+    inline void Image::setImage_(const Path& filepath) {
+        surface_ = IMG_Load(filepath.getPath().c_str());
         if(!surface_) {
             std::cerr << IMG_GetError() << std::endl;
         }
@@ -236,10 +281,10 @@ namespace grynca {
     inline SDL_Palette* Image::createGreyscalePalette_() {
         SDL_Palette* p = SDL_AllocPalette(256);
         SDL_Color colors[256];
-        for(uint8_t i=0;i<=255;i++){
-            colors[i].r=i;
-            colors[i].g=i;
-            colors[i].b=i;
+        for(uint32_t i=0;i<=255;i++){
+            colors[i].r=(uint8_t)i;
+            colors[i].g=(uint8_t)i;
+            colors[i].b=(uint8_t)i;
             colors[i].a=255;
         }
         SDL_SetPaletteColors(p, colors, 0, 256);
@@ -249,6 +294,7 @@ namespace grynca {
     inline uint32_t Image::GLFormat2SDLFormat_(GLenum gl_format) {
         switch (gl_format) {
             case GL_LUMINANCE:
+            case GL_ALPHA:
                 return SDL_PIXELFORMAT_INDEX8;
             case GL_RGB:
 #if SDL_BYTEORDER == SDL_LIL_ENDIAN
@@ -280,7 +326,7 @@ namespace grynca {
         }
     }
 
-    inline std::ostream& operator <<(std::ostream& os, const Pixel& p) {
+    inline std::ostream& operator <<(std::ostream& os, const Color & p) {
         std::cout << "[" << (int)p.r << ", " << (int)p.g << ", " << (int)p.b << ", " << (int)p.a << "]";
         return os;
     }
