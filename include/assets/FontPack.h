@@ -5,15 +5,11 @@
 #include "Image.h"
 #include "TexturePacker.h"
 #include "types/Path.h"
-#include <unordered_map>
-#include <string>
 
 namespace grynca {
-
     // fw
-    class FontsPacks;
     class Font;
-
+    class FontsPacks;
 
     class FontSize {
     public:

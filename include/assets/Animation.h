@@ -16,6 +16,7 @@ namespace grynca {
         const std::string& getImagePath()const;
         float getTime()const;
         const TextureRegion& getRegion()const;
+        uint32_t getFrameId()const;
 
         void setTime(float time);
     private:
@@ -24,12 +25,13 @@ namespace grynca {
         std::string image_path_;
         TextureRegion region_;
         float time_;
+        uint32_t frame_id_;
     };
 
 
     class Animation : public ManagedItem<Animations> {
     public:
-        void init(const fast_vector<AnimationFrame>& frames);
+        Animation& init(const fast_vector<AnimationFrame>& frames);
 
 
         uint32_t getFramesCount()const;

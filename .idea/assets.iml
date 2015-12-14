@@ -14,6 +14,7 @@
       <sourceFolder url="file://$MODULE_DIR$/include/assets/FontPack.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/include/assets/FontPack.inl" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/include/assets/FontsPacks.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/assets/FontsPacks.inl" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/include/assets/Image.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/include/assets/Image.inl" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/include/assets/ImagesPack.h" isTestSource="false" />
@@ -50,27 +51,28 @@
           <root url="file:///usr/local/include" />
         </SOURCES>
         <excluded>
-          <root url="file://$MODULE_DIR$/include/assets/Font.inl" />
-          <root url="file://$MODULE_DIR$/include/assets/Font.h" />
-          <root url="file://$MODULE_DIR$/include/assets/Animation.h" />
-          <root url="file://$MODULE_DIR$/include/assets.h" />
-          <root url="file://$MODULE_DIR$/include/assets/Image.inl" />
-          <root url="file://$MODULE_DIR$/include/assets/Image.h" />
-          <root url="file://$MODULE_DIR$/include/assets/TexturePacker.inl" />
-          <root url="file://$MODULE_DIR$/include/assets/TexturePacker.h" />
-          <root url="file://$MODULE_DIR$/include/assets/SkylinePacker.inl" />
-          <root url="file://$MODULE_DIR$/include/assets/SkylinePacker.h" />
           <root url="file://$MODULE_DIR$/include/assets/ImagesPack.inl" />
-          <root url="file://$MODULE_DIR$/include/assets/ImagesPack.h" />
-          <root url="file://$MODULE_DIR$/include/assets/Animation.inl" />
-          <root url="file://$MODULE_DIR$/include/assets/ImagesPacks.h" />
+          <root url="file://$MODULE_DIR$/include/assets/SkylinePacker.inl" />
           <root url="file://$MODULE_DIR$/include/assets/FontsPacks.h" />
-          <root url="file://$MODULE_DIR$/include/assets/AssetsManager.inl" />
-          <root url="file://$MODULE_DIR$/include/assets/Animations.h" />
-          <root url="file://$MODULE_DIR$/include/assets/AssetsManager.h" />
           <root url="file://$MODULE_DIR$/include/assets/ftinclude.h" />
-          <root url="file://$MODULE_DIR$/include/assets/FontPack.inl" />
+          <root url="file://$MODULE_DIR$/include/assets/FontsPacks.inl" />
           <root url="file://$MODULE_DIR$/include/assets/FontPack.h" />
+          <root url="file://$MODULE_DIR$/include/assets/Image.inl" />
+          <root url="file://$MODULE_DIR$/include/assets/AssetsManager.h" />
+          <root url="file://$MODULE_DIR$/include/assets.h" />
+          <root url="file://$MODULE_DIR$/include/assets/TexturePacker.h" />
+          <root url="file://$MODULE_DIR$/include/assets/Image.h" />
+          <root url="file://$MODULE_DIR$/include/assets/ImagesPack.h" />
+          <root url="file://$MODULE_DIR$/include/assets/Animation.h" />
+          <root url="file://$MODULE_DIR$/include/assets/ImagesPacks.h" />
+          <root url="file://$MODULE_DIR$/include/assets/Animations.h" />
+          <root url="file://$MODULE_DIR$/include/assets/SkylinePacker.h" />
+          <root url="file://$MODULE_DIR$/include/assets/FontPack.inl" />
+          <root url="file://$MODULE_DIR$/include/assets/Font.h" />
+          <root url="file://$MODULE_DIR$/include/assets/AssetsManager.inl" />
+          <root url="file://$MODULE_DIR$/include/assets/Animation.inl" />
+          <root url="file://$MODULE_DIR$/include/assets/TexturePacker.inl" />
+          <root url="file://$MODULE_DIR$/include/assets/Font.inl" />
         </excluded>
       </library>
     </orderEntry>

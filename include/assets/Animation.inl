@@ -6,7 +6,7 @@
 namespace grynca {
 
     inline AnimationFrame::AnimationFrame(const std::string& image_path, float time)
-     : image_path_(image_path), time_(time)
+     : image_path_(image_path), time_(time), frame_id_(Index::Invalid())
     {
     }
 
@@ -22,13 +22,21 @@ namespace grynca {
         return region_;
     }
 
+    inline uint32_t AnimationFrame::getFrameId()const {
+        return frame_id_;
+    }
+
     inline void AnimationFrame::setTime(float time) {
         time_ = time;
     }
 
-    inline void Animation::init(const fast_vector<AnimationFrame>& frames) {
+    inline Animation& Animation::init(const fast_vector<AnimationFrame>& frames) {
         ASSERT(frames.size(), "Animation must contain at least 1 frame.");
         frames_ = frames;
+        for (uint32_t i=0; i<frames_.size(); ++i) {
+            frames_[i].frame_id_ = i;
+        }
+
         AssetsManager& mgr = getManager().getManager();
 
         // find pack where is first frame
@@ -51,6 +59,7 @@ namespace grynca {
             ASSERT(it!=pack->getRegions().end(), "Animation frame not found");
             frames_[i].region_ = it->second;
         }
+        return *this;
     }
 
     inline uint32_t Animation::getFramesCount()const {

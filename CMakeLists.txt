@@ -34,6 +34,9 @@ set(SOURCE_FILES
         include/assets/Animation.inl
         include/assets/AssetsManager.h
         include/assets/AssetsManager.inl
-        include/assets/Animations.h include/assets/FontsPacks.h include/assets/ImagesPacks.h)
+        include/assets/Animations.h
+        include/assets/FontsPacks.h
+        include/assets/FontsPacks.inl
+        include/assets/ImagesPacks.h)
 add_executable(assets ${SOURCE_FILES})
 target_link_libraries(assets ${LIBS})
