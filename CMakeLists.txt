@@ -2,15 +2,31 @@ cmake_minimum_required(VERSION 3.2)
 project(assets)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -std=gnu++0x" )
-# for profiling
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fno-omit-frame-pointer -gdwarf-2" )
 
-include_directories(/home/grynca/DEV/gamedev/base/src/)
-include_directories(/home/grynca/DEV/gamedev/maths/src/)
+
 include_directories(include/)
-include_directories(/usr/include/freetype2)
+IF (WIN32)
+    # for profiling
+    #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fno-omit-frame-pointer -gdwarf-2" )
+    include_directories(c:/DEV/gamedev/base/src/)
+    include_directories(c:/DEV/gamedev/maths/include/)
+    include_directories(c:/DEV/libs/mingw/glm/)
+    include_directories(c:/DEV/libs/mingw/glew-1.13.0/include/)
+    link_directories(c:/DEV/libs/mingw/glew-1.13.0/lib/)
+    include_directories(c:/DEV/libs/mingw/freetype-2.6/include/)
+    link_directories(c:/DEV/libs/mingw/freetype-2.6/lib/)
+    include_directories(c:/DEV/libs/mingw/SDL2-2.0.4/x86/include/)
+    link_directories(c:/DEV/libs/mingw/SDL2-2.0.4/x86/lib)
 
-set(LIBS "-lfreetype -lSDL2 -lSDL2_image")
+    set(LIBS "-lfreetype -lglew32 -lmingw32 -lSDL2main -lSDL2 -lSDL2_image")
+ELSE()
+    include_directories(/home/grynca/DEV/gamedev/base/src/)
+    include_directories(/home/grynca/DEV/gamedev/maths/include/)
+    include_directories(/usr/include/freetype2)
+
+    set(LIBS "-lfreetype -lSDL2 -lSDL2_image")
+ENDIF()
+
 
 set(SOURCE_FILES
         test/main.cpp

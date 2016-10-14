@@ -12,7 +12,6 @@ int main(int argc, char* argv[]) {
         for (uint32_t y=50; y<100; ++y) {
         i->setPixel(x, y, {0,0,0,0});
     }
-
     i->saveToPNG("yoda_out.png");
 
     ImagesPack ip;
@@ -29,6 +28,6 @@ int main(int argc, char* argv[]) {
                                    {"data/images/yoda.jpg", 5}
                                });
 
-    KEY_TO_CONTINUE();
+    WAIT_FOR_KEY_ON_WIN();
     return 0;
 }

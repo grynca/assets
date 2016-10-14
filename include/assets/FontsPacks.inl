@@ -12,11 +12,11 @@ namespace grynca {
 
     inline FontPack* FontsPacks::findByFontname(const std::string& fontname) {
         for (uint32_t i=0; i<getItemsCount(); ++i) {
-            FontPack & fp = getItemAtPos(i);
-            if (fp.isNull())
+            FontPack* fp = getItemAtPos(i);
+            if (!fp || fp->isNull())
                 continue;
-            if (fp.getFont().getFontname() == fontname)
-                return &fp;
+            if (fp->getFont().getFontname() == fontname)
+                return fp;
         }
         return NULL;
     }

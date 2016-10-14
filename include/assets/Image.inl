@@ -76,32 +76,32 @@ namespace grynca {
     }
 
     inline uint32_t Image::getWidth()const {
-        assert(!isNull());
+        ASSERT(!isNull());
         return uint32_t(surface_->w);
     }
 
     inline uint32_t Image::getHeight()const {
-        assert(!isNull());
+        ASSERT(!isNull());
         return uint32_t(surface_->h);
     }
 
     inline uint8_t Image::getDepth()const {
-        assert(!isNull());
+        ASSERT(!isNull());
         return surface_->format->BytesPerPixel;
     }
 
     inline uint32_t Image::getPitch()const {
-        assert(!isNull());
+        ASSERT(!isNull());
         return uint32_t(surface_->pitch);
     }
 
     inline uint8_t const* Image::getDataPtr() const {
-        assert(!isNull());
+        ASSERT(!isNull());
         return (uint8_t*)surface_->pixels;
     }
 
     inline uint8_t* Image::getDataPtr() {
-        assert(!isNull());
+        ASSERT(!isNull());
         return (uint8_t*)surface_->pixels;
     }
 
@@ -114,12 +114,12 @@ namespace grynca {
     }
 
     inline void Image::copyRectOut(const ARect& subrect, void* data_out) {
-        assert(!isNull());
+        ASSERT(!isNull());
         // checks if sub region fits into image
-        assert(subrect.getX() >= 0 && subrect.getY() >= 0);
-        assert(subrect.getWidth() > 0 && subrect.getHeight() > 0);
-        assert(subrect.getRightBot().getX() <= getWidth());
-        assert(subrect.getRightBot().getY() <= getHeight());
+        ASSERT(subrect.getX() >= 0 && subrect.getY() >= 0);
+        ASSERT(subrect.getWidth() > 0 && subrect.getHeight() > 0);
+        ASSERT(subrect.getRightBot().getX() <= getWidth());
+        ASSERT(subrect.getRightBot().getY() <= getHeight());
 
         uint32_t img_pitch = getPitch();
         uint32_t sub_pitch = uint32_t(subrect.getWidth() * getDepth());
@@ -135,7 +135,7 @@ namespace grynca {
     }
 
     inline GLenum Image::getGLFormat() const {
-        assert(!isNull());
+        ASSERT(!isNull());
         GLenum gl_format = 0;
         switch (getDepth()) {
             case 1:
@@ -164,7 +164,7 @@ namespace grynca {
     }
 
     inline bool Image::convertTo(GLenum gl_format) {
-        assert(!isNull());
+        ASSERT(!isNull());
         SDL_PixelFormat *f = SDL_AllocFormat(GLFormat2SDLFormat_(gl_format));
         if (!f) {
             std::cerr << SDL_GetError() << std::endl;
@@ -205,7 +205,7 @@ namespace grynca {
     }
 
     inline Color Image::getPixel(uint32_t x, uint32_t y) {
-        assert(x < getWidth() && y<getHeight());
+        ASSERT(x < getWidth() && y<getHeight());
         uint32_t pixel = *(uint32_t*)&getDataPtr()[getPitch()*y + getDepth()*x];
 
         SDL_PixelFormat *f = surface_->format;
@@ -235,7 +235,7 @@ namespace grynca {
     }
 
     inline void Image::setPixel(uint32_t x, uint32_t y, Color color) {
-        assert(x < getWidth() && y<getHeight());
+        ASSERT(x < getWidth() && y<getHeight());
         uint32_t& p = *(uint32_t*)&getDataPtr()[getPitch()*y + getDepth()*x];
         SDL_PixelFormat *f = surface_->format;
         p =     (uint32_t)color.r << f->Rshift
@@ -245,7 +245,7 @@ namespace grynca {
     }
 
     inline void Image::fillWithColor(Color color) {
-        assert(!isNull());
+        ASSERT(!isNull());
         for (uint32_t x=0; x<getWidth(); ++x) {
             for (uint32_t y=0; y<getHeight(); ++y) {
                 setPixel(x, y, color);
@@ -266,7 +266,7 @@ namespace grynca {
             case GL_BGRA:
                 return 4;
             default:
-                ASSERT(false, "Unknown GL format");
+                ASSERT_M(false, "Unknown GL format");
                 return uint32_t(-1);
         }
     }
@@ -321,13 +321,18 @@ namespace grynca {
                 return SDL_PIXELFORMAT_BGRA8888;
 #endif
             default:
-                assert(!"unknown format type");
+                ASSERT(!"unknown format type");
                 return 0;
         }
     }
 
     inline std::ostream& operator <<(std::ostream& os, const Color & p) {
         std::cout << "[" << (int)p.r << ", " << (int)p.g << ", " << (int)p.b << ", " << (int)p.a << "]";
+        return os;
+    }
+
+    inline std::ostream& operator <<(std::ostream& os, const Colorf & p) {
+        std::cout << "[" << p.r << ", " << p.g << ", " << p.b << ", " << p.a << "]";
         return os;
     }
 }

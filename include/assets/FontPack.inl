@@ -73,12 +73,12 @@ namespace grynca {
         FT_RAII ft;
         FT_Error error = ft.initLibrary();
         if (error) {
-            std::cerr << "[FontPack::loadFont]: " << getFreeTypeErrorMsg(error) << std::endl;
+            std::cerr << "[FontPack::loadFont]: " << font_path.getPath() << getFreeTypeErrorMsg(error) << std::endl;
             return false;
         }
         error = ft.initFont(font_path);
         if (error) {
-            std::cerr << "[FontPack::loadFont]: " << getFreeTypeErrorMsg(error) << std::endl;
+            std::cerr << "[FontPack::loadFont]: " << font_path.getPath() << " " << getFreeTypeErrorMsg(error) << std::endl;
             return false;
         }
         Path p = font_path;
@@ -94,7 +94,7 @@ namespace grynca {
         // select unicode charmap
         error = FT_Select_Charmap(ft.face, FT_ENCODING_UNICODE);
         if (error) {
-            std::cerr << "[FontPack::loadFont]: " << getFreeTypeErrorMsg(error) << std::endl;
+            std::cerr << "[FontPack::loadFont]: " << font_path.getPath() << " " << getFreeTypeErrorMsg(error) << std::endl;
             return false;
         }
 
@@ -108,7 +108,7 @@ namespace grynca {
                 // set font size
                 error = FT_Set_Char_Size(ft.face, (int)(size * HRES), 0, DPI, DPI);
                 if (error) {
-                    std::cerr << "[FontPack::loadFont]: " << getFreeTypeErrorMsg(error) << std::endl;
+                    std::cerr << "[FontPack::loadFont]: " << font_path.getPath() << " " << getFreeTypeErrorMsg(error) << std::endl;
                     return false;
                 }
 
@@ -116,12 +116,12 @@ namespace grynca {
                     FT_UInt glyph_index = FT_Get_Char_Index(ft.face, (uint32_t)chars_to_load_[i]);
                     error = FT_Load_Glyph(ft.face, glyph_index, FT_LOAD_DEFAULT );
                     if (error) {
-                        std::cerr << "[FontPack::loadFont]: " << getFreeTypeErrorMsg(error) << std::endl;
+                        std::cerr << "[FontPack::loadFont]: " << font_path.getPath() << " " << getFreeTypeErrorMsg(error) << std::endl;
                         return false;
                     }
                     error = FT_Render_Glyph( ft.face->glyph, FT_RENDER_MODE_NORMAL);
                     if (error) {
-                        std::cerr << "[FontPack::loadFont]: " << getFreeTypeErrorMsg(error) << std::endl;
+                        std::cerr << "[FontPack::loadFont]: " << font_path.getPath() << " " << getFreeTypeErrorMsg(error) << std::endl;
                         return false;
                     }
 

@@ -73,12 +73,12 @@ namespace grynca {
     }
 
     inline Glyph& SizedFont::getGlyph(char charcode) {
-        ASSERT(containsGlyph(charcode), "Sized font does not contain desired glyph.");
+        ASSERT_M(containsGlyph(charcode), "Sized font does not contain desired glyph.");
         return *glyphs_[charcode];
     }
 
     inline const Glyph& SizedFont::getGlyph(char charcode)const {
-        ASSERT(containsGlyph(charcode), "Sized font does not contain desired glyph.");
+        ASSERT_M(containsGlyph(charcode), "Sized font does not contain desired glyph.");
         return *glyphs_[charcode];
     }
 
@@ -109,12 +109,12 @@ namespace grynca {
     }
 
     inline SizedFont& Font::getSizedFont(uint32_t font_size) {
-        ASSERT(containsSizedFont(font_size), "Font size is not contained for " +fontname_);
+        ASSERT_M(containsSizedFont(font_size), "Font size is not contained for " +fontname_);
         return *sizes_[font_size];
     }
 
     inline const SizedFont& Font::getSizedFont(uint32_t font_size)const {
-        ASSERT(containsSizedFont(font_size), "Font size is not contained for " +fontname_);
+        ASSERT_M(containsSizedFont(font_size), "Font size is not contained for " +fontname_);
         return *sizes_[font_size];
     }
 

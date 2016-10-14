@@ -6,7 +6,7 @@
 namespace grynca {
 
     inline AnimationFrame::AnimationFrame(const std::string& image_path, float time)
-     : image_path_(image_path), time_(time), frame_id_(Index::Invalid())
+     : image_path_(image_path), time_(time), frame_id_(InvalidId())
     {
     }
 
@@ -31,7 +31,7 @@ namespace grynca {
     }
 
     inline Animation& Animation::init(const fast_vector<AnimationFrame>& frames) {
-        ASSERT(frames.size(), "Animation must contain at least 1 frame.");
+        ASSERT_M(frames.size(), "Animation must contain at least 1 frame.");
         frames_ = frames;
         for (uint32_t i=0; i<frames_.size(); ++i) {
             frames_[i].frame_id_ = i;
@@ -43,7 +43,9 @@ namespace grynca {
         ImagesPack* pack = NULL;
         bool found = false;
         for (uint32_t j=0; j<mgr.getImagesPacks().getItemsCount(); ++j) {
-            pack = &mgr.getImagesPacks().getItemAtPos(j);
+            pack = mgr.getImagesPacks().getItemAtPos(j);
+            if (!pack)
+                continue;
             ImagesPack::Regions::const_iterator it = pack->getRegions().find(frames_[0].getImagePath());
             if (it!=pack->getRegions().end()) {
                 found = true;
@@ -51,12 +53,12 @@ namespace grynca {
             }
         }
 
-        ASSERT(found, "First animation frame not found.");
+        ASSERT_M(found, "First animation frame not found.");
 
         // set regions for rest of the frames (must be in same pack)
         for (uint32_t i=1; i<frames_.size(); ++i) {
             ImagesPack::Regions::const_iterator it = pack->getRegions().find(frames_[i].getImagePath());
-            ASSERT(it!=pack->getRegions().end(), "Animation frame not found");
+            ASSERT_M(it!=pack->getRegions().end(), "Animation frame not found");
             frames_[i].region_ = it->second;
         }
         return *this;
