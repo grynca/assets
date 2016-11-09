@@ -25,21 +25,21 @@ namespace grynca {
 
         Colorf() {}
 
-        constexpr Colorf(float r, float g, float b, float a = 1.0f)
+        constexpr Colorf(f32 r, f32 g, f32 b, f32 a = 1.0f)
                 : r(r), g(g), b(b), a(a) {}
 
-        Colorf(float* clr) {
-            memcpy(c_, clr, sizeof(float)*4);
+        Colorf(f32* clr) {
+            memcpy(c_, clr, sizeof(f32)*4);
         }
 
         union {
             struct {
-                float r;
-                float g;
-                float b;
-                float a;
+                f32 r;
+                f32 g;
+                f32 b;
+                f32 a;
             };
-            float c_[4];
+            f32 c_[4];
         };
     };
 
@@ -55,7 +55,7 @@ namespace grynca {
 
         Color() {}
 
-        constexpr Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255)
+        constexpr Color(u8 r, u8 g, u8 b, u8 a = 255)
          : r(r), g(g), b(b), a(a) {}
 
         Colorf toFloat() {
@@ -63,10 +63,10 @@ namespace grynca {
         }
 
         void fromFloat(const Colorf& c) {
-            r = (uint8_t)(c.r*255);
-            g = (uint8_t)(c.g*255);
-            b = (uint8_t)(c.b*255);
-            a = (uint8_t)(c.a*255);
+            r = (u8)(c.r*255);
+            g = (u8)(c.g*255);
+            b = (u8)(c.b*255);
+            a = (u8)(c.a*255);
         }
 
         bool operator==(const Color& other) { return other.all == all;}
@@ -74,12 +74,12 @@ namespace grynca {
 
         union {
             struct {
-                uint8_t r;
-                uint8_t g;
-                uint8_t b;
-                uint8_t a;
+                u8 r;
+                u8 g;
+                u8 b;
+                u8 a;
             };
-            uint32_t all;
+            u32 all;
         };
     };
 
@@ -88,7 +88,7 @@ namespace grynca {
         typedef RefPtr<Image> Ref;
 
         Image();    // dummy image
-        Image(uint32_t width, uint32_t height, GLenum gl_format);   // empty image
+        Image(u32 width, u32 height, GLenum gl_format);   // empty image
         Image(const Path& filepath);
         Image(Image&& i);
 
@@ -99,15 +99,15 @@ namespace grynca {
         bool isNull()const;
 
         Vec2 getSize()const;
-        uint32_t getWidth()const;
-        uint32_t getHeight()const;
-        uint8_t getDepth()const;
-        uint32_t getPitch()const;
+        u32 getWidth()const;
+        u32 getHeight()const;
+        u8 getDepth()const;
+        u32 getPitch()const;
 
-        uint8_t const* getDataPtr() const;
-        uint8_t* getDataPtr();
+        u8 const* getDataPtr() const;
+        u8* getDataPtr();
 
-        fast_vector<uint8_t> getRectData(const ARect& subrect);
+        fast_vector<u8> getRectData(const ARect& subrect);
         void copyRectOut(const ARect& subrect, void* data_out);
 
         GLenum getGLFormat() const;
@@ -116,12 +116,12 @@ namespace grynca {
 
         SDL_Surface* getInternal();
 
-        Color getPixel(uint32_t x, uint32_t y);
-        void setPixel(uint32_t x, uint32_t y, Color color);
+        Color getPixel(u32 x, u32 y);
+        void setPixel(u32 x, u32 y, Color color);
 
         void fillWithColor(Color color);
 
-        static uint32_t getFormatDepth(GLenum format);
+        static u32 getFormatDepth(GLenum format);
     private:
         friend class RefPtr<Image>;
 
@@ -131,7 +131,7 @@ namespace grynca {
 
         void setImage_(const Path& filepath);
         SDL_Palette* createGreyscalePalette_();
-        uint32_t GLFormat2SDLFormat_(GLenum gl_format);
+        u32 GLFormat2SDLFormat_(GLenum gl_format);
 
         SDL_Surface* surface_;
         std::bitset<1> flags_;      // 0.. gl_alpha

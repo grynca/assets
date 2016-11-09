@@ -1,14 +1,15 @@
 #include "SkylinePacker.h"
+#include "types/Index.h"
 
 namespace grynca {
 
-    inline SkylinePacker::SkylinePacker(uint32_t width, uint32_t max_height)
+    inline SkylinePacker::SkylinePacker(u32 width, u32 max_height)
      : width_(width), max_height_(max_height), used_width_(0), used_height_(0), used_pixels_(0)
     {
         skyline_.push_back({0, 0, width_});
     }
 
-    inline bool SkylinePacker::addRegion(uint32_t width, uint32_t height, uint32_t& x_out, uint32_t& y_out) {
+    inline bool SkylinePacker::addRegion(u32 width, u32 height, u32& x_out, u32& y_out) {
         if (width > width_)
             return false;
 
@@ -16,15 +17,15 @@ namespace grynca {
         width +=2;
         height +=2;
 
-        uint32_t best_height = std::numeric_limits<uint32_t>::max();
-        uint32_t best_width = std::numeric_limits<uint32_t>::max();
+        u32 best_height = std::numeric_limits<u32>::max();
+        u32 best_width = std::numeric_limits<u32>::max();
         int best_index = -1;
         x_out = y_out = 0;
 
-        for(uint32_t i=0; i<skyline_.size(); ++i) {
-            int y = fit_(i, width, height);
+        for(u32 i=0; i<skyline_.size(); ++i) {
+            u32 y = fit_(i, width, height);
 
-            if(y >= 0) {
+            if(y != InvalidId()) {
                 Segment_& segm = skyline_[i];
                 if( ( (y + height) < best_height ) ||
                     ( ((y + height) == best_height) && (segm.width < best_width)) )
@@ -33,7 +34,7 @@ namespace grynca {
                     best_index = i;
                     best_width = segm.width;
                     x_out = segm.x;
-                    y_out = uint32_t(y);
+                    y_out = u32(y);
                 }
             }
         }
@@ -42,21 +43,21 @@ namespace grynca {
 
         skyline_.insert(skyline_.begin()+best_index, Segment_{x_out, (y_out+height), width});
 
-        for(uint32_t i = uint32_t(best_index)+1; i < skyline_.size(); ++i) {
+        for(u32 i = u32(best_index)+1; i < skyline_.size(); ++i) {
             Segment_& segm = skyline_[i];
             Segment_& prev = skyline_[i-1];
 
             if (segm.x < (prev.x + prev.width) ) {
                 int shrink = prev.x + prev.width - segm.x;
                 segm.x += shrink;
-                int32_t w = segm.width - shrink;
+                i32 w = segm.width - shrink;
                 if (w <= 0) {
 
                     skyline_.erase(skyline_.begin()+i);
                     --i;
                 }
                 else {
-                    segm.width = uint32_t(w);
+                    segm.width = u32(w);
                     break;
                 }
             }
@@ -86,38 +87,38 @@ namespace grynca {
         skyline_.push_back({0, 0, width_}); // add default skyline (single segment line on top)
     }
 
-    inline uint32_t SkylinePacker::getWidth()const {
+    inline u32 SkylinePacker::getWidth()const {
         return width_;
     }
 
-    inline uint32_t SkylinePacker::getMaxHeight()const {
+    inline u32 SkylinePacker::getMaxHeight()const {
         return max_height_;
     }
 
-    inline uint32_t SkylinePacker::getUsedWidth()const {
+    inline u32 SkylinePacker::getUsedWidth()const {
         return used_width_;
     }
 
-    inline uint32_t SkylinePacker::getUsedHeight()const {
+    inline u32 SkylinePacker::getUsedHeight()const {
         return used_height_;
     }
 
-    inline uint64_t SkylinePacker::getUsedPixels()const {
+    inline u64 SkylinePacker::getUsedPixels()const {
         return used_pixels_;
     }
 
-    inline float SkylinePacker::getEfficiency()const {
+    inline f32 SkylinePacker::getEfficiency()const {
         return used_pixels_/(used_width_*used_height_);
     }
 
-    inline int SkylinePacker::fit_(uint32_t s_id, uint32_t width, uint32_t height) {
+    inline u32 SkylinePacker::fit_(u32 s_id, u32 width, u32 height) {
         Segment_& segm = skyline_[s_id];
-        int x = segm.x;
+        u32 x = segm.x;
         if ((x+width) > (width_))
-            return -1;
-        int y = segm.y;
+            return InvalidId();
+        u32 y = segm.y;
         if (max_height_ > 0 && (y+height) > (max_height_))
-            return -1;
+            return InvalidId();
         int width_left = width;
         int i = s_id;
 
@@ -127,7 +128,7 @@ namespace grynca {
                 y = s.y;
             }
             if (max_height_ > 0 && (y+height) > (max_height_))
-                return -1;
+                return InvalidId();
             width_left -= s.width;
             ++i;
         }
@@ -135,7 +136,7 @@ namespace grynca {
     }
 
     inline void SkylinePacker::merge_() {
-        for(uint32_t i=0; i< skyline_.size()-1; ++i) {
+        for(u32 i=0; i< skyline_.size()-1; ++i) {
             Segment_& segm = skyline_[i];
             Segment_& next = skyline_[i+1];
             if (segm.y == next.y) {

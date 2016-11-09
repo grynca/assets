@@ -17,7 +17,7 @@ namespace grynca {
         typedef std::unordered_map<std::string, TextureRegion> Regions;
 
         ImagesPack();
-        ImagesPack(const Path& dir_path, GLenum format, uint32_t texture_w = 2048);     // loads dir immediatelly
+        ImagesPack(const Path& dir_path, GLenum format, u32 texture_w = 2048);     // loads dir immediatelly
 
         bool isNull();
         Image::Ref getPackImage();
@@ -26,7 +26,7 @@ namespace grynca {
         // recursively loads images/animations from directory
         //  images will be named with their relative path to dir
         //  clears previous pack content
-        bool loadDir(const Path& dir_path, GLenum format, uint32_t texture_w = 2048);
+        bool loadDir(const Path& dir_path, GLenum format, u32 texture_w = 2048);
 
         const Regions& getRegions()const;
     private:

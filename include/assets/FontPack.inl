@@ -29,19 +29,19 @@ namespace grynca {
         FT_Face face;
     };
 
-    inline FontSize::FontSize(uint32_t size)
+    inline FontSize::FontSize(u32 size)
      : from_(size), to_(size)
     {}
 
-    inline FontSize::FontSize(uint32_t size_from, uint32_t size_to)
+    inline FontSize::FontSize(u32 size_from, u32 size_to)
      : from_(size_from), to_(size_to)
     {}
 
-    inline uint32_t FontSize::getFrom()const {
+    inline u32 FontSize::getFrom()const {
         return from_;
     }
 
-    inline uint32_t FontSize::getTo()const {
+    inline u32 FontSize::getTo()const {
         return to_;
     }
 
@@ -50,7 +50,7 @@ namespace grynca {
        font_(NULL)
     {}
 
-    inline FontPack::FontPack(const Path& font_path, const fast_vector<FontSize>& sizes, uint32_t texture_w)
+    inline FontPack::FontPack(const Path& font_path, const fast_vector<FontSize>& sizes, u32 texture_w)
      : FontPack()
     {
         loadFont(font_path, sizes, texture_w);
@@ -69,7 +69,7 @@ namespace grynca {
         return *font_;
     }
 
-    inline bool FontPack::loadFont(const Path& font_path, const fast_vector<FontSize>& sizes, uint32_t texture_w) {
+    inline bool FontPack::loadFont(const Path& font_path, const fast_vector<FontSize>& sizes, u32 texture_w) {
         FT_RAII ft;
         FT_Error error = ft.initLibrary();
         if (error) {
@@ -101,7 +101,7 @@ namespace grynca {
         fast_vector<Glyph*> glyphs; // indexed with region-id
 
         for (auto it=sizes.begin(); it!=sizes.end(); ++it) {
-            for (uint32_t size=it->getFrom(); size<=it->getTo(); ++size) {
+            for (u32 size=it->getFrom(); size<=it->getTo(); ++size) {
                 if (font_->containsSizedFont(size))
                     continue;
                 SizedFont& sized_font = font_->addSize(size);
@@ -113,7 +113,7 @@ namespace grynca {
                 }
 
                 for (unsigned int i=0; i<chars_to_load_.size(); ++i) {
-                    FT_UInt glyph_index = FT_Get_Char_Index(ft.face, (uint32_t)chars_to_load_[i]);
+                    FT_UInt glyph_index = FT_Get_Char_Index(ft.face, (u32)chars_to_load_[i]);
                     error = FT_Load_Glyph(ft.face, glyph_index, FT_LOAD_DEFAULT );
                     if (error) {
                         std::cerr << "[FontPack::loadFont]: " << font_path.getPath() << " " << getFreeTypeErrorMsg(error) << std::endl;
@@ -129,8 +129,8 @@ namespace grynca {
                     // pack glyph bitmap to texture
                     unsigned int w = slot->bitmap.width;
                     unsigned int h = slot->bitmap.rows;
-                    int32_t reg_id = packer.addRegion(w, h, slot->bitmap.buffer, true);
-                    if (reg_id<0) {
+                    u32 reg_id = packer.addRegion(w, h, slot->bitmap.buffer, true);
+                    if (reg_id == InvalidId()) {
                         std::cout << "[FontPack::loadFont] no space for glyph in packer." << std::endl;
                         return false;
                     }
@@ -138,10 +138,10 @@ namespace grynca {
 
                     Glyph& curr_glyph = sized_font.addGlyph(chars_to_load_[i], rect,
                                                             slot->bitmap_left, slot->bitmap_top,
-                                                            slot->advance.x/(float)HRES);
+                                                            slot->advance.x/(f32)HRES);
 
                     if (reg_id >= glyphs.size())
-                        glyphs.resize(uint32_t(reg_id)+1, NULL);
+                        glyphs.resize(u32(reg_id)+1, NULL);
                     glyphs[reg_id] = &curr_glyph;
 
                     // get kernings
@@ -150,11 +150,11 @@ namespace grynca {
                         char prev_char = chars_to_load_[j];
                         Glyph& prev_glyph = sized_font.getGlyph(prev_char);
 
-                        FT_UInt prev_glyph_index = FT_Get_Char_Index(ft.face, (uint32_t)prev_glyph.getCharcode());
+                        FT_UInt prev_glyph_index = FT_Get_Char_Index(ft.face, (u32)prev_glyph.getCharcode());
                         // kerning when prev_glyph is on left
                         FT_Get_Kerning( ft.face, prev_glyph_index, glyph_index, FT_KERNING_UNFITTED, &kerning );
                         if(kerning.x)
-                            prev_glyph.addKerning(Kerning{chars_to_load_[i], (float)kerning.x/(float)HRES});
+                            prev_glyph.addKerning(Kerning{chars_to_load_[i], (f32)kerning.x/(f32)HRES});
 
                         if (prev_glyph_index != glyph_index) {
                             // only when glyphs are different add the other way around
@@ -162,7 +162,7 @@ namespace grynca {
                             // kerning when prev_glyph is on right
                             FT_Get_Kerning( ft.face, glyph_index, prev_glyph_index, FT_KERNING_UNFITTED, &kerning );
                             if (kerning.x)
-                                curr_glyph.addKerning(Kerning{prev_char, (float)kerning.x/(float)HRES});
+                                curr_glyph.addKerning(Kerning{prev_char, (f32)kerning.x/(f32)HRES});
                         }
                     }
                 }
@@ -174,7 +174,7 @@ namespace grynca {
         packer.packData(pack_image_->getDataPtr(), pack_image_->getPitch());
 
         // set texture regions to glyphs
-        for (uint32_t i=0; i<glyphs.size(); ++i) {
+        for (u32 i=0; i<glyphs.size(); ++i) {
             if (!glyphs[i])
                 continue;
             glyphs[i]->getRegion().setTextureRect(packer.getRegions()[i].getTextureRect());

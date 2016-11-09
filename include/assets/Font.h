@@ -52,7 +52,7 @@ namespace grynca {
     // specific offset for some glyph-pairs
     struct Kerning {
         char charcode;
-        float value;
+        f32 value;
     };
 
     class Glyph {
@@ -63,19 +63,19 @@ namespace grynca {
         const TextureRegion& getRegion()const;
         int getOffsetX()const;
         int getOffsetY()const;
-        float getAdvanceX()const;
-        float getKerning(char charcode)const;
+        f32 getAdvanceX()const;
+        f32 getKerning(char charcode)const;
         void addKerning(const Kerning& kerning);
     private:
         friend class SizedFont;
 
         Glyph();
-        Glyph(char charcode, const ARect& region, int offset_x, int offset_y, float advance_x);
+        Glyph(char charcode, const ARect& region, int offset_x, int offset_y, f32 advance_x);
 
         char charcode_;
         TextureRegion region_;
         int offset_x_, offset_y_;
-        float advance_x_;        // in fractional pixels
+        f32 advance_x_;        // in fractional pixels
 
         fast_vector<Kerning> kernings_;
     };
@@ -90,7 +90,7 @@ namespace grynca {
         Glyph& getGlyph(char charcode);
         const Glyph& getGlyph(char charcode)const;
         Glyph& addGlyph(char charcode, const ARect& region,
-                        int offset_x, int offset_y, float advance_x);
+                        int offset_x, int offset_y, f32 advance_x);
     private:
         friend class Font;
 
@@ -104,10 +104,10 @@ namespace grynca {
         Font(const std::string& fontname = "");
         ~Font();
 
-        bool containsSizedFont(uint32_t font_size)const;
-        SizedFont& getSizedFont(uint32_t font_size);
-        const SizedFont& getSizedFont(uint32_t font_size)const;
-        fast_vector<uint32_t> getSizes()const;
+        bool containsSizedFont(u32 font_size)const;
+        SizedFont& getSizedFont(u32 font_size);
+        const SizedFont& getSizedFont(u32 font_size)const;
+        fast_vector<u32> getSizes()const;
         SizedFont& addSize(size_t s);
 
         void setFontname(const std::string& fontname);

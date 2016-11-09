@@ -8,8 +8,8 @@ int main(int argc, char* argv[]) {
     Image::Ref i = new Image("data/images/yoda.jpg");
     std::cout << i->getSize() << std::endl;
 
-    for (uint32_t x=0; x<100; ++x)
-        for (uint32_t y=50; y<100; ++y) {
+    for (u32 x=0; x<100; ++x)
+        for (u32 y=50; y<100; ++y) {
         i->setPixel(x, y, {0,0,0,0});
     }
     i->saveToPNG("yoda_out.png");

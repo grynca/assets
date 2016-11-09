@@ -5,7 +5,7 @@
 
 namespace grynca {
 
-    inline AnimationFrame::AnimationFrame(const std::string& image_path, float time)
+    inline AnimationFrame::AnimationFrame(const std::string& image_path, f32 time)
      : image_path_(image_path), time_(time), frame_id_(InvalidId())
     {
     }
@@ -14,7 +14,7 @@ namespace grynca {
         return image_path_;
     }
 
-    inline float AnimationFrame::getTime()const {
+    inline f32 AnimationFrame::getTime()const {
         return time_;
     }
 
@@ -22,18 +22,18 @@ namespace grynca {
         return region_;
     }
 
-    inline uint32_t AnimationFrame::getFrameId()const {
+    inline u32 AnimationFrame::getFrameId()const {
         return frame_id_;
     }
 
-    inline void AnimationFrame::setTime(float time) {
+    inline void AnimationFrame::setTime(f32 time) {
         time_ = time;
     }
 
     inline Animation& Animation::init(const fast_vector<AnimationFrame>& frames) {
         ASSERT_M(frames.size(), "Animation must contain at least 1 frame.");
         frames_ = frames;
-        for (uint32_t i=0; i<frames_.size(); ++i) {
+        for (u32 i=0; i<frames_.size(); ++i) {
             frames_[i].frame_id_ = i;
         }
 
@@ -42,7 +42,7 @@ namespace grynca {
         // find pack where is first frame
         ImagesPack* pack = NULL;
         bool found = false;
-        for (uint32_t j=0; j<mgr.getImagesPacks().getItemsCount(); ++j) {
+        for (u32 j=0; j<mgr.getImagesPacks().getItemsCount(); ++j) {
             pack = mgr.getImagesPacks().getItemAtPos(j);
             if (!pack)
                 continue;
@@ -56,7 +56,7 @@ namespace grynca {
         ASSERT_M(found, "First animation frame not found.");
 
         // set regions for rest of the frames (must be in same pack)
-        for (uint32_t i=1; i<frames_.size(); ++i) {
+        for (u32 i=1; i<frames_.size(); ++i) {
             ImagesPack::Regions::const_iterator it = pack->getRegions().find(frames_[i].getImagePath());
             ASSERT_M(it!=pack->getRegions().end(), "Animation frame not found");
             frames_[i].region_ = it->second;
@@ -64,10 +64,10 @@ namespace grynca {
         return *this;
     }
 
-    inline uint32_t Animation::getFramesCount()const {
-        return uint32_t(frames_.size());
+    inline u32 Animation::getFramesCount()const {
+        return u32(frames_.size());
     }
-    inline AnimationFrame& Animation::getFrame(uint32_t frame_id) {
+    inline AnimationFrame& Animation::getFrame(u32 frame_id) {
         return frames_[frame_id];
     }
 

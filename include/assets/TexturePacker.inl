@@ -36,7 +36,7 @@ namespace grynca {
         texture_rect_.setSize(rb-lt);
     }
 
-    inline TexturePacker::TexturePacker(uint32_t width, GLenum format, uint32_t max_height)
+    inline TexturePacker::TexturePacker(u32 width, GLenum format, u32 max_height)
      : packer_(width, max_height), format_(format), depth_(Image::getFormatDepth(format))
     {
     }
@@ -46,7 +46,7 @@ namespace grynca {
     }
 
     inline void TexturePacker::clear() {
-        for (uint32_t i=0; i<region_data_.size(); ++i) {
+        for (u32 i=0; i<region_data_.size(); ++i) {
             if (data_owned_[i])
                 delete region_data_[i];
         }
@@ -55,31 +55,31 @@ namespace grynca {
         regions_.clear();
     }
 
-    inline int TexturePacker::addRegion(uint32_t width, uint32_t height, void* data, bool copy_data_inside) {
-        uint32_t reg_x, reg_y;
+    inline u32 TexturePacker::addRegion(u32 width, u32 height, void* data, bool copy_data_inside) {
+        u32 reg_x, reg_y;
         if (!packer_.addRegion(width, height, reg_x, reg_y)) {
-            return -1;
+            return InvalidId();
         }
         data_owned_.push_back(copy_data_inside);
         if (copy_data_inside) {
-            uint32_t data_size = width*height*depth_;
-            uint8_t* data_copy = new uint8_t[data_size];
+            u32 data_size = width*height*depth_;
+            u8* data_copy = new u8[data_size];
             memcpy(data_copy, data, data_size);
             region_data_.push_back(data_copy);
         }
         else {
-            region_data_.push_back((uint8_t*)data);
+            region_data_.push_back((u8*)data);
         }
-        int reg_id = (int)regions_.size();
+        u32 reg_id = regions_.size();
         regions_.emplace_back();
         ARect rect(Vec2(reg_x, reg_y), Vec2(width, height));
         regions_.back().setRect(rect);
         return reg_id;
     }
 
-    inline void TexturePacker::packData(void* dest, uint32_t dst_pitch, bool flip_y) {
-        uint32_t atlas_w = getTextureWidth();
-        uint32_t atlas_h = getTextureHeight();
+    inline void TexturePacker::packData(void* dest, u32 dst_pitch, bool flip_y) {
+        u32 atlas_w = getTextureWidth();
+        u32 atlas_h = getTextureHeight();
         if (atlas_w==0 || atlas_h==0)
             return;
         int dest_pos_advancement;
@@ -87,14 +87,14 @@ namespace grynca {
             dest_pos_advancement = -dst_pitch;
         else
             dest_pos_advancement = dst_pitch;
-        uint8_t* d = (uint8_t*)dest;
-        for (uint32_t i=0; i<regions_.size(); ++i) {
+        u8* d = (u8*)dest;
+        for (u32 i=0; i<regions_.size(); ++i) {
             TextureRegion& reg = regions_[i];
             reg.setTC(Vec2(atlas_w, atlas_h), flip_y);
-            uint32_t reg_x = uint32_t(reg.getRect().getX());
-            uint32_t reg_y = uint32_t(reg.getRect().getY());
-            uint32_t reg_w = uint32_t(reg.getRect().getWidth());
-            uint32_t reg_h = uint32_t(reg.getRect().getHeight());
+            u32 reg_x = u32(reg.getRect().getX());
+            u32 reg_y = u32(reg.getRect().getY());
+            u32 reg_w = u32(reg.getRect().getWidth());
+            u32 reg_h = u32(reg.getRect().getHeight());
             size_t reg_stride = reg_w*depth_;
             size_t dest_pos;
             if (flip_y) {
@@ -103,7 +103,7 @@ namespace grynca {
             else {
                 dest_pos = reg_y*dst_pitch + reg_x*depth_;
             }
-            for (uint32_t j=0; j<reg_h; ++j) {
+            for (u32 j=0; j<reg_h; ++j) {
                 // copy by rows
                 size_t src_pos = j*reg_stride;
                 memcpy(&d[dest_pos], &region_data_[i][src_pos], reg_stride);
@@ -116,11 +116,11 @@ namespace grynca {
         return regions_;
     }
 
-    inline uint32_t TexturePacker::getTextureWidth()const {
+    inline u32 TexturePacker::getTextureWidth()const {
         return nextPow2_(packer_.getUsedWidth());
     }
 
-    inline uint32_t TexturePacker::getTextureHeight()const {
+    inline u32 TexturePacker::getTextureHeight()const {
         return nextPow2_(packer_.getUsedHeight());
     }
 
@@ -128,11 +128,11 @@ namespace grynca {
         return format_;
     }
 
-    inline uint32_t TexturePacker::getDepth()const {
+    inline u32 TexturePacker::getDepth()const {
         return depth_;
     }
 
-    inline uint32_t TexturePacker::nextPow2_(uint32_t num)const {
+    inline u32 TexturePacker::nextPow2_(u32 num)const {
         num--;
         num |= num >> 1;
         num |= num >> 2;

@@ -7,7 +7,7 @@ namespace grynca {
 
     inline ImagesPack::ImagesPack() {}
 
-    inline ImagesPack::ImagesPack(const Path& dir_path, GLenum format, uint32_t texture_w) {
+    inline ImagesPack::ImagesPack(const Path& dir_path, GLenum format, u32 texture_w) {
         loadDir(dir_path, format, texture_w);
     }
 
@@ -27,7 +27,7 @@ namespace grynca {
         return getRectImage_(rect);
     }
 
-    inline bool ImagesPack::loadDir(const Path& dir_path, GLenum format, uint32_t texture_w) {
+    inline bool ImagesPack::loadDir(const Path& dir_path, GLenum format, u32 texture_w) {
         regions_.clear();
 
         TexturePacker packer(texture_w, format);
@@ -50,8 +50,8 @@ namespace grynca {
         // add regions to packer
         for (size_t i=0; i<order.size(); ++i) {
             Image& img = images[order[i]].get();
-            int reg_id = packer.addRegion(img.getWidth(), img.getHeight(), img.getDataPtr());
-            if ( reg_id == -1) {
+            u32 reg_id = packer.addRegion(img.getWidth(), img.getHeight(), img.getDataPtr());
+            if ( reg_id == InvalidId()) {
                 Path& path = paths[order[i]];
                 std::cerr << "Image " << path << " does not fit into texture." << std::endl;
                 return false;
@@ -74,7 +74,7 @@ namespace grynca {
     }
 
     inline Image::Ref ImagesPack::getRectImage_(const ARect& r) {
-        Image::Ref img = new Image((uint32_t)r.getWidth(), (uint32_t)r.getHeight(), pack_image_->getGLFormat());
+        Image::Ref img = new Image((u32)r.getWidth(), (u32)r.getHeight(), pack_image_->getGLFormat());
         pack_image_->copyRectOut(r, img->getDataPtr());
         img->convertTo(pack_image_->getGLFormat());
         return img;

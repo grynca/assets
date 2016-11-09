@@ -1,13 +1,22 @@
 cmake_minimum_required(VERSION 3.2)
 project(assets)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -std=gnu++0x" )
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DGLM_FORCE_RADIANS -std=c++14 -ffast-math -Wall -Werror" )
 
+IF (CMAKE_BUILD_TYPE STREQUAL "Release")
+    #disable profiling
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNPROFILE" )
+ENDIF()
+
+IF (CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+    IF (WIN32)
+        # for profiling
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-omit-frame-pointer -gdwarf-2" )
+    ENDIF()
+ENDIF()
 
 include_directories(include/)
 IF (WIN32)
-    # for profiling
-    #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fno-omit-frame-pointer -gdwarf-2" )
     include_directories(c:/DEV/gamedev/base/src/)
     include_directories(c:/DEV/gamedev/maths/include/)
     include_directories(c:/DEV/libs/mingw/glm/)

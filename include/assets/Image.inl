@@ -10,7 +10,7 @@ namespace grynca {
      : surface_(NULL)
     {}
 
-    inline Image::Image(uint32_t width, uint32_t height, GLenum gl_format)
+    inline Image::Image(u32 width, u32 height, GLenum gl_format)
      : Image()
     {
         SDL_PixelFormat* f = SDL_AllocFormat(GLFormat2SDLFormat_(gl_format));
@@ -72,42 +72,42 @@ namespace grynca {
     }
 
     inline Vec2 Image::getSize()const {
-        return {(float)getWidth(), (float)getHeight()};
+        return {(f32)getWidth(), (f32)getHeight()};
     }
 
-    inline uint32_t Image::getWidth()const {
+    inline u32 Image::getWidth()const {
         ASSERT(!isNull());
-        return uint32_t(surface_->w);
+        return u32(surface_->w);
     }
 
-    inline uint32_t Image::getHeight()const {
+    inline u32 Image::getHeight()const {
         ASSERT(!isNull());
-        return uint32_t(surface_->h);
+        return u32(surface_->h);
     }
 
-    inline uint8_t Image::getDepth()const {
+    inline u8 Image::getDepth()const {
         ASSERT(!isNull());
         return surface_->format->BytesPerPixel;
     }
 
-    inline uint32_t Image::getPitch()const {
+    inline u32 Image::getPitch()const {
         ASSERT(!isNull());
-        return uint32_t(surface_->pitch);
+        return u32(surface_->pitch);
     }
 
-    inline uint8_t const* Image::getDataPtr() const {
+    inline u8 const* Image::getDataPtr() const {
         ASSERT(!isNull());
-        return (uint8_t*)surface_->pixels;
+        return (u8*)surface_->pixels;
     }
 
-    inline uint8_t* Image::getDataPtr() {
+    inline u8* Image::getDataPtr() {
         ASSERT(!isNull());
-        return (uint8_t*)surface_->pixels;
+        return (u8*)surface_->pixels;
     }
 
-    inline fast_vector<uint8_t> Image::getRectData(const ARect& subrect) {
-        fast_vector<uint8_t> data;
-        uint32_t data_size = (uint32_t)subrect.getWidth()*(uint32_t)subrect.getHeight();
+    inline fast_vector<u8> Image::getRectData(const ARect& subrect) {
+        fast_vector<u8> data;
+        u32 data_size = (u32)subrect.getWidth()*(u32)subrect.getHeight();
         data.resize(data_size);
         copyRectOut(subrect, &data[0]);
         return data;
@@ -121,12 +121,12 @@ namespace grynca {
         ASSERT(subrect.getRightBot().getX() <= getWidth());
         ASSERT(subrect.getRightBot().getY() <= getHeight());
 
-        uint32_t img_pitch = getPitch();
-        uint32_t sub_pitch = uint32_t(subrect.getWidth() * getDepth());
-        uint8_t *dest = (uint8_t*)data_out;
-        uint8_t *src = (uint8_t *) getDataPtr();
-        uint32_t src_pos = uint32_t(subrect.getY() * getPitch() + subrect.getX() * getDepth());
-        uint32_t dst_pos = 0;
+        u32 img_pitch = getPitch();
+        u32 sub_pitch = u32(subrect.getWidth() * getDepth());
+        u8 *dest = (u8*)data_out;
+        u8 *src = (u8 *) getDataPtr();
+        u32 src_pos = u32(subrect.getY() * getPitch() + subrect.getX() * getDepth());
+        u32 dst_pos = 0;
         for (unsigned int i = 0; i < subrect.getHeight(); ++i) {
             memcpy(&dest[dst_pos], &src[src_pos], sub_pitch);
             dst_pos += sub_pitch;
@@ -204,56 +204,56 @@ namespace grynca {
         return surface_;
     }
 
-    inline Color Image::getPixel(uint32_t x, uint32_t y) {
+    inline Color Image::getPixel(u32 x, u32 y) {
         ASSERT(x < getWidth() && y<getHeight());
-        uint32_t pixel = *(uint32_t*)&getDataPtr()[getPitch()*y + getDepth()*x];
+        u32 pixel = *(u32*)&getDataPtr()[getPitch()*y + getDepth()*x];
 
         SDL_PixelFormat *f = surface_->format;
-        uint32_t tmp;
+        u32 tmp;
         Color p;
         tmp = pixel & f->Rmask;
         tmp = tmp >> f->Rshift;
         tmp = tmp << f->Rloss;
-        p.r = uint8_t(tmp);
+        p.r = u8(tmp);
 
         tmp = pixel & f->Gmask;
         tmp = tmp >> f->Gshift;
         tmp = tmp << f->Gloss;
-        p.g = uint8_t(tmp);
+        p.g = u8(tmp);
 
         tmp = pixel & f->Bmask;
         tmp = tmp >> f->Bshift;
         tmp = tmp << f->Bloss;
-        p.b = uint8_t(tmp);
+        p.b = u8(tmp);
 
         tmp = pixel & f->Amask;
         tmp = tmp >> f->Ashift;
         tmp = tmp << f->Aloss;
-        p.a = uint8_t(tmp);
+        p.a = u8(tmp);
 
         return p;
     }
 
-    inline void Image::setPixel(uint32_t x, uint32_t y, Color color) {
+    inline void Image::setPixel(u32 x, u32 y, Color color) {
         ASSERT(x < getWidth() && y<getHeight());
-        uint32_t& p = *(uint32_t*)&getDataPtr()[getPitch()*y + getDepth()*x];
+        u32& p = *(u32*)&getDataPtr()[getPitch()*y + getDepth()*x];
         SDL_PixelFormat *f = surface_->format;
-        p =     (uint32_t)color.r << f->Rshift
-              | (uint32_t)color.g << f->Gshift
-              | (uint32_t)color.b << f->Bshift
-              | (uint32_t)color.a << f->Ashift;
+        p =     (u32)color.r << f->Rshift
+              | (u32)color.g << f->Gshift
+              | (u32)color.b << f->Bshift
+              | (u32)color.a << f->Ashift;
     }
 
     inline void Image::fillWithColor(Color color) {
         ASSERT(!isNull());
-        for (uint32_t x=0; x<getWidth(); ++x) {
-            for (uint32_t y=0; y<getHeight(); ++y) {
+        for (u32 x=0; x<getWidth(); ++x) {
+            for (u32 y=0; y<getHeight(); ++y) {
                 setPixel(x, y, color);
             }
         }
     }
 
-    inline uint32_t Image::getFormatDepth(GLenum format) {
+    inline u32 Image::getFormatDepth(GLenum format) {
         //static
         switch (format) {
             case GL_LUMINANCE:
@@ -267,7 +267,7 @@ namespace grynca {
                 return 4;
             default:
                 ASSERT_M(false, "Unknown GL format");
-                return uint32_t(-1);
+                return u32(-1);
         }
     }
 
@@ -281,17 +281,17 @@ namespace grynca {
     inline SDL_Palette* Image::createGreyscalePalette_() {
         SDL_Palette* p = SDL_AllocPalette(256);
         SDL_Color colors[256];
-        for(uint32_t i=0;i<=255;i++){
-            colors[i].r=(uint8_t)i;
-            colors[i].g=(uint8_t)i;
-            colors[i].b=(uint8_t)i;
+        for(u32 i=0;i<=255;i++){
+            colors[i].r=(u8)i;
+            colors[i].g=(u8)i;
+            colors[i].b=(u8)i;
             colors[i].a=255;
         }
         SDL_SetPaletteColors(p, colors, 0, 256);
         return p;
     }
 
-    inline uint32_t Image::GLFormat2SDLFormat_(GLenum gl_format) {
+    inline u32 Image::GLFormat2SDLFormat_(GLenum gl_format) {
         switch (gl_format) {
             case GL_LUMINANCE:
             case GL_ALPHA:

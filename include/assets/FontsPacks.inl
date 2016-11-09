@@ -11,7 +11,7 @@ namespace grynca {
     }
 
     inline FontPack* FontsPacks::findByFontname(const std::string& fontname) {
-        for (uint32_t i=0; i<getItemsCount(); ++i) {
+        for (u32 i=0; i<getItemsCount(); ++i) {
             FontPack* fp = getItemAtPos(i);
             if (!fp || fp->isNull())
                 continue;

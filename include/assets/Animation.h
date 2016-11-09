@@ -11,21 +11,21 @@ namespace grynca {
 
     class AnimationFrame {
     public:
-        AnimationFrame(const std::string& image_path, float time);
+        AnimationFrame(const std::string& image_path, f32 time);
 
         const std::string& getImagePath()const;
-        float getTime()const;
+        f32 getTime()const;
         const TextureRegion& getRegion()const;
-        uint32_t getFrameId()const;
+        u32 getFrameId()const;
 
-        void setTime(float time);
+        void setTime(f32 time);
     private:
         friend class Animation;
 
         std::string image_path_;
         TextureRegion region_;
-        float time_;
-        uint32_t frame_id_;
+        f32 time_;
+        u32 frame_id_;
     };
 
 
@@ -34,8 +34,8 @@ namespace grynca {
         Animation& init(const fast_vector<AnimationFrame>& frames);
 
 
-        uint32_t getFramesCount()const;
-        AnimationFrame& getFrame(uint32_t frame_id);
+        u32 getFramesCount()const;
+        AnimationFrame& getFrame(u32 frame_id);
     private:
         fast_vector<AnimationFrame> frames_;
     };

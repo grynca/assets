@@ -25,33 +25,33 @@ namespace grynca {
 
     class TexturePacker {
     public:
-        TexturePacker(uint32_t width, GLenum format, uint32_t max_height = SkylinePacker::MAX_HEIGHT_NOT_SET);
+        TexturePacker(u32 width, GLenum format, u32 max_height = SkylinePacker::MAX_HEIGHT_NOT_SET);
         ~TexturePacker();
         void clear();
 
-        //  returns region id or -1 when region does not fit into packer
+        //  returns region id or InvalidId() when region does not fit into packer
         //  data must contain width*height*depth bytes
-        int addRegion(uint32_t width, uint32_t height, void* data, bool copy_data_inside = false);
+        u32 addRegion(u32 width, u32 height, void* data, bool copy_data_inside = false);
 
         // packs data to buffer
-        void packData(void* dest, uint32_t dst_pitch, bool flip_y = false);
+        void packData(void* dest, u32 dst_pitch, bool flip_y = false);
 
         const fast_vector<TextureRegion>& getRegions()const;
-        uint32_t getTextureWidth()const;
-        uint32_t getTextureHeight()const;
+        u32 getTextureWidth()const;
+        u32 getTextureHeight()const;
 
         GLenum getFormat()const;
-        uint32_t getDepth()const;
+        u32 getDepth()const;
     private:
 
-        uint32_t nextPow2_(uint32_t num)const;
+        u32 nextPow2_(u32 num)const;
 
         SkylinePacker packer_;
         GLenum format_;
-        uint32_t depth_;
+        u32 depth_;
 
         fast_vector<TextureRegion> regions_;
-        fast_vector<uint8_t*> region_data_;
+        fast_vector<u8*> region_data_;
         fast_vector<bool> data_owned_;
     };
 

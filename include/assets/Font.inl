@@ -22,11 +22,11 @@ namespace grynca {
         return offset_y_;
     }
 
-    inline float Glyph::getAdvanceX()const {
+    inline f32 Glyph::getAdvanceX()const {
         return advance_x_;
     }
 
-    inline float Glyph::getKerning(char charcode)const {
+    inline f32 Glyph::getKerning(char charcode)const {
         fast_vector<Kerning>::const_iterator it = std::find_if(kernings_.begin(), kernings_.end(), [charcode](const Kerning& k) {
             return k.charcode==charcode;
         });
@@ -44,7 +44,7 @@ namespace grynca {
      : charcode_(0), offset_x_(0), offset_y_(0), advance_x_(0)
     {}
 
-    inline Glyph::Glyph(char charcode, const ARect& region, int offset_x, int offset_y, float advance_x)
+    inline Glyph::Glyph(char charcode, const ARect& region, int offset_x, int offset_y, f32 advance_x)
      : charcode_(charcode), offset_x_(offset_x), offset_y_(offset_y), advance_x_(advance_x)
     {
         region_.setRect(region);
@@ -58,7 +58,7 @@ namespace grynca {
     }
 
     inline bool SizedFont::containsGlyph(char charcode)const {
-        if (charcode >= glyphs_.size())
+        if ((u8)charcode >= glyphs_.size())
             return false;
         return glyphs_[charcode] != NULL;
     }
@@ -82,8 +82,8 @@ namespace grynca {
         return *glyphs_[charcode];
     }
 
-    inline Glyph& SizedFont::addGlyph(char charcode, const ARect& region, int offset_x, int offset_y, float advance_x) {
-        if (charcode >= glyphs_.size())
+    inline Glyph& SizedFont::addGlyph(char charcode, const ARect& region, int offset_x, int offset_y, f32 advance_x) {
+        if ((u8)charcode >= glyphs_.size())
             glyphs_.resize(size_t(charcode)+1, NULL);
         glyphs_[charcode] = new Glyph(charcode, region, offset_x, offset_y, advance_x);
         return *glyphs_[charcode];
@@ -102,24 +102,24 @@ namespace grynca {
         }
     }
 
-    inline bool Font::containsSizedFont(uint32_t font_size)const {
+    inline bool Font::containsSizedFont(u32 font_size)const {
         if (font_size>=sizes_.size())
             return false;
         return sizes_[font_size] != NULL;
     }
 
-    inline SizedFont& Font::getSizedFont(uint32_t font_size) {
+    inline SizedFont& Font::getSizedFont(u32 font_size) {
         ASSERT_M(containsSizedFont(font_size), "Font size is not contained for " +fontname_);
         return *sizes_[font_size];
     }
 
-    inline const SizedFont& Font::getSizedFont(uint32_t font_size)const {
+    inline const SizedFont& Font::getSizedFont(u32 font_size)const {
         ASSERT_M(containsSizedFont(font_size), "Font size is not contained for " +fontname_);
         return *sizes_[font_size];
     }
 
-    inline fast_vector<uint32_t> Font::getSizes()const {
-        fast_vector<uint32_t> sizes_out;
+    inline fast_vector<u32> Font::getSizes()const {
+        fast_vector<u32> sizes_out;
         for (size_t i=0; i<sizes_.size(); ++i) {
             if (sizes_[i])
                 sizes_out.push_back(i);
