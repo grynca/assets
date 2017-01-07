@@ -20,6 +20,8 @@ namespace grynca {
         static Colorf White() {return Colorf{1.0f, 1.0f, 1.0f};}
         static Colorf Green() {return Colorf{0, 1.0f, 0};}
         static Colorf Blue() {return Colorf{0, 0, 1.0f};}
+        static Colorf Yellow() {return Colorf{1.0f, 1.0f, 0};}
+        static Colorf Orange() {return Colorf{1.0f, 0.4f, 0};}
 
         friend std::ostream& operator <<(std::ostream& os, const Colorf & p);
 
@@ -50,6 +52,8 @@ namespace grynca {
         static Color White() {return Color{255, 255, 255};}
         static Color Green() {return Color{0, 255, 0};}
         static Color Blue() {return Color{0, 0, 255};}
+        static Color Yellow() {return Color{255, 255, 0};}
+        static Color Orange() {return Color{255, 102, 0};}
 
         friend std::ostream& operator <<(std::ostream& os, const Color & p);
 

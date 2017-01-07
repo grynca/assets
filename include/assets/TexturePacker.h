@@ -33,6 +33,9 @@ namespace grynca {
         //  data must contain width*height*depth bytes
         u32 addRegion(u32 width, u32 height, void* data, bool copy_data_inside = false);
 
+        u32 addPaddedRegion(u32 width, u32 height, u32 left_pad, u32 top_pad, u32 right_pad, u32 bot_pad,
+                            void* data, bool copy_data_inside = false);
+
         // packs data to buffer
         void packData(void* dest, u32 dst_pitch, bool flip_y = false);
 

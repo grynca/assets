@@ -1,0 +1,4 @@
+#ifndef ASSETS_CONFIG_H
+#define ASSETS_CONFIG_H
+
+#endif //ASSETS_CONFIG_H

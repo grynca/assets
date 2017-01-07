@@ -24,10 +24,9 @@ int main(int argc, char* argv[]) {
 
     AssetsManager am;
     am.getImagesPacks().addItem("data/images", GL_RGBA, 4096);
-    am.getAnimations().addItem().init({
-                                   {"data/images/yoda.jpg", 5}
+    am.getSpriteAnimations().addItem().setFrames({
+                                   {"data/images/yoda.jpg", 0.01f}
                                });
-
     WAIT_FOR_KEY_ON_WIN();
     return 0;
 }

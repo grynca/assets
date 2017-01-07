@@ -1,30 +1,29 @@
 #ifndef ASSETSMANAGER_H
 #define ASSETSMANAGER_H
 
-#include "ImagesPacks.h"
-#include "FontsPacks.h"
-#include "Animations.h"
-
-
 namespace grynca {
+
+    // fw
+    class ImagesPack;
+    class FontsPack;
+    class SpriteAnimations;
 
     class AssetsManager
     {
     public:
-        AssetsManager()
-         : images_packs_(*this), fonts_packs_(*this), animations_(*this)
-        {}
+        AssetsManager();
+        ~AssetsManager();
 
-        ImagesPacks& getImagesPacks() { return images_packs_; }
-        FontsPacks& getFontsPacks() { return fonts_packs_; }
-        Animations& getAnimations() { return animations_; }
+        ImagesPacks& getImagesPacks();
+        FontsPacks& getFontsPacks();
+        SpriteAnimations& getSpriteAnimations();
 
 
         const TextureRegion* getImageRegion(const std::string& image_path)const;
     private:
-        ImagesPacks images_packs_;
-        FontsPacks fonts_packs_;
-        Animations animations_;
+        ImagesPacks* images_packs_;
+        FontsPacks* fonts_packs_;
+        SpriteAnimations* sprite_animations_;
     };
 
 }

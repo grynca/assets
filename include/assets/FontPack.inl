@@ -62,7 +62,7 @@ namespace grynca {
     }
 
     inline bool FontPack::isNull()const {
-        return font_!=NULL;
+        return font_==NULL;
     }
 
     inline const Font&FontPack::getFont()const {

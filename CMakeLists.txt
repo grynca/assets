@@ -42,6 +42,7 @@ set(SOURCE_FILES
 
 
         include/assets.h
+        include/assets/assets_config.h
         include/assets/Image.h
         include/assets/Image.inl
         include/assets/SkylinePacker.h
@@ -55,13 +56,15 @@ set(SOURCE_FILES
         include/assets/ftinclude.h
         include/assets/Font.h
         include/assets/Font.inl
-        include/assets/Animation.h
-        include/assets/Animation.inl
+        include/assets/SpriteAnimation.h
+        include/assets/SpriteAnimation.inl
         include/assets/AssetsManager.h
         include/assets/AssetsManager.inl
-        include/assets/Animations.h
+        include/assets/SpriteAnimations.h
+        include/assets/SpriteAnimations.inl
         include/assets/FontsPacks.h
         include/assets/FontsPacks.inl
-        include/assets/ImagesPacks.h)
+        include/assets/ImagesPacks.h
+        )
 add_executable(assets ${SOURCE_FILES})
 target_link_libraries(assets ${LIBS})

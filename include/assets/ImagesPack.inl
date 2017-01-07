@@ -7,7 +7,7 @@ namespace grynca {
 
     inline ImagesPack::ImagesPack() {}
 
-    inline ImagesPack::ImagesPack(const Path& dir_path, GLenum format, u32 texture_w) {
+    inline ImagesPack::ImagesPack(const DirPath& dir_path, GLenum format, u32 texture_w) {
         loadDir(dir_path, format, texture_w);
     }
 
@@ -27,30 +27,45 @@ namespace grynca {
         return getRectImage_(rect);
     }
 
-    inline bool ImagesPack::loadDir(const Path& dir_path, GLenum format, u32 texture_w) {
+    inline bool ImagesPack::loadDir(const DirPath& dir_path, GLenum format, u32 texture_w) {
         regions_.clear();
 
         TexturePacker packer(texture_w, format);
         FileLister lister(dir_path, {"jpg", "png", "bmp"}, true);
 
         Path filepath;
-        fast_vector<Image::Ref> images;
+        fast_vector<ImgWithPadding> images;
         fast_vector<Path> paths;
 
         while (lister.nextFile(filepath)) {
-            paths.push_back(filepath);
             images.emplace_back(new Image(filepath));
-            images.back()->convertTo(format);
+            paths.push_back(filepath);
+            images.back().image->convertTo(format);
+
+            std::string name = filepath.getFilenameWOExtension();
+            if (name.rfind("_rp") != std::string::npos) {
+                Vec2 img_size = images.back().image->getSize();
+                f32 diag = sqrtf(2)*std::max(img_size.getX(), img_size.getY());
+                u32 hor_pad = u32(std::ceil((diag-img_size.getX())*0.5f));
+                u32 ver_pad = u32(std::ceil((diag-img_size.getY())*0.5f));
+                images.back().left = hor_pad;
+                images.back().right = hor_pad;
+                images.back().top = ver_pad;
+                images.back().bottom = ver_pad;
+            }
         }
 
         // sort images by height
-        fast_vector<unsigned int> order;
-        indirectSort(images.begin(), images.end(), order, cmpImagesHeightDesc_);
+        fast_vector<u32> order;
+        indirectSort(images.begin(), images.end(), order, [](const ImgWithPadding& i1, const ImgWithPadding& i2) {
+            return (i1.image->getHeight()+i1.top+i1.bottom) > (i2.image->getHeight()+i2.top+i2.bottom);
+        });
 
         // add regions to packer
         for (size_t i=0; i<order.size(); ++i) {
-            Image& img = images[order[i]].get();
-            u32 reg_id = packer.addRegion(img.getWidth(), img.getHeight(), img.getDataPtr());
+            ImgWithPadding& iwp = images[order[i]];
+            Image& img = iwp.image.get();
+            u32 reg_id = packer.addPaddedRegion(img.getWidth(), img.getHeight(), iwp.left, iwp.top, iwp.right, iwp.bottom, img.getDataPtr());
             if ( reg_id == InvalidId()) {
                 Path& path = paths[order[i]];
                 std::cerr << "Image " << path << " does not fit into texture." << std::endl;

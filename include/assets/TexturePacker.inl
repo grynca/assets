@@ -77,6 +77,34 @@ namespace grynca {
         return reg_id;
     }
 
+    inline u32 TexturePacker::addPaddedRegion(u32 width, u32 height, u32 left_pad, u32 top_pad,
+                                              u32 right_pad, u32 bot_pad, void* data, bool copy_data_inside)
+    {
+        u32 padded_w = width+left_pad+right_pad;
+        u32 padded_h = height+top_pad+bot_pad;
+        u32 reg_x, reg_y;
+        if (!packer_.addRegion(padded_w, padded_h, reg_x, reg_y)) {
+            return InvalidId();
+        }
+        reg_x += left_pad;
+        reg_y += top_pad;
+        data_owned_.push_back(copy_data_inside);
+        if (copy_data_inside) {
+            u32 data_size = width*height*depth_;
+            u8* data_copy = new u8[data_size];
+            memcpy(data_copy, data, data_size);
+            region_data_.push_back(data_copy);
+        }
+        else {
+            region_data_.push_back((u8*)data);
+        }
+        u32 reg_id = regions_.size();
+        regions_.emplace_back();
+        ARect rect(Vec2(reg_x, reg_y), Vec2(width, height));
+        regions_.back().setRect(rect);
+        return reg_id;
+    }
+
     inline void TexturePacker::packData(void* dest, u32 dst_pitch, bool flip_y) {
         u32 atlas_w = getTextureWidth();
         u32 atlas_h = getTextureHeight();
