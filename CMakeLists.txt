@@ -17,7 +17,7 @@ ENDIF()
 
 include_directories(include/)
 IF (WIN32)
-    include_directories(c:/DEV/gamedev/base/src/)
+    include_directories(c:/DEV/gamedev/base/include/)
     include_directories(c:/DEV/gamedev/maths/include/)
     include_directories(c:/DEV/libs/mingw/glm/)
     include_directories(c:/DEV/libs/mingw/glew-1.13.0/include/)
@@ -29,7 +29,7 @@ IF (WIN32)
 
     set(LIBS "-lfreetype -lglew32 -lmingw32 -lSDL2main -lSDL2 -lSDL2_image")
 ELSE()
-    include_directories(/home/grynca/DEV/gamedev/base/src/)
+    include_directories(/home/grynca/DEV/gamedev/base/include/)
     include_directories(/home/grynca/DEV/gamedev/maths/include/)
     include_directories(/usr/include/freetype2)
 
