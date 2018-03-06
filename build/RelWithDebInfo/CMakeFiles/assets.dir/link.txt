@@ -1,0 +1,1 @@
+/usr/bin/c++   -DGLM_FORCE_RADIANS -std=c++14 -ffast-math -Wall -Werror -DUSE_SDL2=1 -O2 -g -DNDEBUG  -rdynamic CMakeFiles/assets.dir/test/main.cpp.o  -o assets -lGLEW -lGL -lGLU -lSDL2 -lfreetype -lSDL2_image 

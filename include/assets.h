@@ -11,6 +11,6 @@
 #include "assets/FontPack.h"
 #include "assets/SpriteAnimations.h"
 #include "assets/SpriteAnimation.h"
-#include "assets/AssetsManager.h"
+#include "assets/AssetsManagerBase.h"
 
 #endif //ASSETS_H

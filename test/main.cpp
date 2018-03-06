@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
     FontPack fp("data/fonts/arial.ttf", {{10}, {14,20}, {25,30}});
     fp.getPackImage()->saveToPNG("font_texture_out.png");
 
-    AssetsManager am;
+    AssetsManagerBase am;
     am.getImagesPacks().addItem("data/images", GL_RGBA, 4096);
     am.getSpriteAnimations().addItem().setFrames({
                                    {"data/images/yoda.jpg", 0.01f}

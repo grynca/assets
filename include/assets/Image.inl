@@ -39,6 +39,8 @@ namespace grynca {
         if (gl_format == GL_ALPHA) {
             flags_[0] = true;
         }
+
+        ASSERT_M(surface_->format->BytesPerPixel*surface_->w == surface_->pitch, "ugh, image row padding not supported. ");
     }
 
     inline Image::Image(const Path& filepath)
@@ -95,7 +97,7 @@ namespace grynca {
         return u32(surface_->pitch);
     }
 
-    inline u8 const* Image::getDataPtr() const {
+    inline const u8* Image::getDataPtr() const {
         ASSERT(!isNull());
         return (u8*)surface_->pixels;
     }
@@ -124,7 +126,7 @@ namespace grynca {
         u32 img_pitch = getPitch();
         u32 sub_pitch = u32(subrect.getWidth() * getDepth());
         u8 *dest = (u8*)data_out;
-        u8 *src = (u8 *) getDataPtr();
+        u8 *src = getDataPtr();
         u32 src_pos = u32(subrect.getY() * getPitch() + subrect.getX() * getDepth());
         u32 dst_pos = 0;
         for (unsigned int i = 0; i < subrect.getHeight(); ++i) {
@@ -206,49 +208,22 @@ namespace grynca {
 
     inline Color Image::getPixel(u32 x, u32 y) {
         ASSERT(x < getWidth() && y<getHeight());
-        u32 pixel = *(u32*)&getDataPtr()[getPitch()*y + getDepth()*x];
-
-        SDL_PixelFormat *f = surface_->format;
-        u32 tmp;
-        Color p;
-        tmp = pixel & f->Rmask;
-        tmp = tmp >> f->Rshift;
-        tmp = tmp << f->Rloss;
-        p.r = u8(tmp);
-
-        tmp = pixel & f->Gmask;
-        tmp = tmp >> f->Gshift;
-        tmp = tmp << f->Gloss;
-        p.g = u8(tmp);
-
-        tmp = pixel & f->Bmask;
-        tmp = tmp >> f->Bshift;
-        tmp = tmp << f->Bloss;
-        p.b = u8(tmp);
-
-        tmp = pixel & f->Amask;
-        tmp = tmp >> f->Ashift;
-        tmp = tmp << f->Aloss;
-        p.a = u8(tmp);
-
-        return p;
+        Color rslt;
+        SDL_GetRGBA(getPixel_(x, y), surface_->format, &rslt.r, &rslt.g, &rslt.b, &rslt.a);
+        return rslt;
     }
 
     inline void Image::setPixel(u32 x, u32 y, Color color) {
         ASSERT(x < getWidth() && y<getHeight());
-        u32& p = *(u32*)&getDataPtr()[getPitch()*y + getDepth()*x];
-        SDL_PixelFormat *f = surface_->format;
-        p =     (u32)color.r << f->Rshift
-              | (u32)color.g << f->Gshift
-              | (u32)color.b << f->Bshift
-              | (u32)color.a << f->Ashift;
+        setPixel_(x, y, SDL_MapRGBA(surface_->format, color.r, color.g, color.b, color.a));
     }
 
     inline void Image::fillWithColor(Color color) {
         ASSERT(!isNull());
-        for (u32 x=0; x<getWidth(); ++x) {
-            for (u32 y=0; y<getHeight(); ++y) {
-                setPixel(x, y, color);
+        u32 mapped_clr = SDL_MapRGBA(surface_->format, color.r, color.g, color.b, color.a);
+        for (u32 x = 0; x<getWidth(); ++x) {
+            for (u32 y = 0; y<getHeight(); ++y) {
+                setPixel_(x, y, mapped_clr);
             }
         }
     }
@@ -323,6 +298,60 @@ namespace grynca {
             default:
                 ASSERT(!"unknown format type");
                 return 0;
+        }
+    }
+
+    inline u32 Image::getPixel_(u32 x, u32 y) {
+        int bpp = surface_->format->BytesPerPixel;
+        u8 *p = (u8*)surface_->pixels + y * surface_->pitch + x * bpp;
+
+        switch(bpp) {
+            case 1:
+                return *p;
+            case 2:
+                return *(Uint16 *)p;
+            case 3:
+                if(SDL_BYTEORDER == SDL_BIG_ENDIAN)
+                    return p[0] << 16 | p[1] << 8 | p[2];
+                else
+                    return p[0] | p[1] << 8 | p[2] << 16;
+            case 4:
+                return *(u32*)p;
+            default:
+                NEVER_GET_HERE("invalid bpp");
+                return 0;
+        }
+    }
+
+    inline void Image::setPixel_(u32 x, u32 y, u32 pixel_val) {
+        int bpp = surface_->format->BytesPerPixel;
+        u8* p = (u8*)surface_->pixels + y * surface_->pitch + x * bpp;
+
+        switch(bpp) {
+            case 1:
+                *p = u8(pixel_val);
+                break;
+            case 2:
+                *(u16*)p = u16(pixel_val);
+                break;
+            case 3:
+                if(SDL_BYTEORDER == SDL_BIG_ENDIAN) {
+                    p[0] = u8((pixel_val >> 16) & 0xff);
+                    p[1] = u8((pixel_val >> 8) & 0xff);
+                    p[2] = u8(pixel_val & 0xff);
+                } else {
+                    p[0] = u8(pixel_val& 0xff);
+                    p[1] = u8((pixel_val >> 8) & 0xff);
+                    p[2] = u8((pixel_val >> 16) & 0xff);
+                }
+                break;
+
+            case 4:
+                *(u32*)p = pixel_val;
+                break;
+            default:
+                NEVER_GET_HERE("invalid bpp");
+                break;
         }
     }
 

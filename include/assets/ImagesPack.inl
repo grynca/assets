@@ -5,9 +5,13 @@
 
 namespace grynca {
 
-    inline ImagesPack::ImagesPack() {}
+    inline ImagesPack::ImagesPack()
+     :texture_id_(InvalidId())
+    {}
 
-    inline ImagesPack::ImagesPack(const DirPath& dir_path, GLenum format, u32 texture_w) {
+    inline ImagesPack::ImagesPack(const DirPath& dir_path, GLenum format, u32 texture_w, u32 texture_id)
+     : texture_id_(texture_id)
+    {
         loadDir(dir_path, format, texture_w);
     }
 
@@ -42,8 +46,9 @@ namespace grynca {
             paths.push_back(filepath);
             images.back().image->convertTo(format);
 
-            std::string name = filepath.getFilenameWOExtension();
-            if (name.rfind("_rp") != std::string::npos) {
+            ustring name = filepath.getFilenameWOExtension();
+            if (name.size()>=3 && name.substr(name.end()-3, name.end())=="_rp") {
+                // wraps sprite with empty padding, so we can sample it freely even rotated
                 Vec2 img_size = images.back().image->getSize();
                 f32 diag = sqrtf(2)*std::max(img_size.getX(), img_size.getY());
                 u32 hor_pad = u32(std::ceil((diag-img_size.getX())*0.5f));
@@ -56,18 +61,19 @@ namespace grynca {
         }
 
         // sort images by height
-        fast_vector<u32> order;
-        indirectSort(images.begin(), images.end(), order, [](const ImgWithPadding& i1, const ImgWithPadding& i2) {
-            return (i1.image->getHeight()+i1.top+i1.bottom) > (i2.image->getHeight()+i2.top+i2.bottom);
+        fast_vector<ImgWithPadding*> order;
+        indirectSort(images.begin(), images.end(), order, [](const ImgWithPadding* i1, const ImgWithPadding* i2) {
+            return (i1->image->getHeight()+i1->top+i1->bottom) > (i2->image->getHeight()+i2->top+i2->bottom);
         });
 
         // add regions to packer
         for (size_t i=0; i<order.size(); ++i) {
-            ImgWithPadding& iwp = images[order[i]];
+            ImgWithPadding& iwp = *order[i];
             Image& img = iwp.image.get();
             u32 reg_id = packer.addPaddedRegion(img.getWidth(), img.getHeight(), iwp.left, iwp.top, iwp.right, iwp.bottom, img.getDataPtr());
             if ( reg_id == InvalidId()) {
-                Path& path = paths[order[i]];
+                u32 image_id = u32(order[i] - images.begin());
+                Path& path = paths[image_id];
                 std::cerr << "Image " << path << " does not fit into texture." << std::endl;
                 return false;
             }
@@ -78,7 +84,8 @@ namespace grynca {
         packer.packData(pack_image_->getDataPtr(), pack_image_->getPitch());
         // gather regions
         for (size_t i=0; i<order.size(); ++i) {
-            Path& path = paths[order[i]];
+            u32 image_id = u32(order[i] - images.begin());
+            Path& path = paths[image_id];
             regions_[path.getPath()] = packer.getRegions()[i];
         }
         return true;

@@ -26,7 +26,7 @@ namespace grynca {
     class FontPack : public ManagedItem<FontsPacks> {
     public:
         FontPack();
-        FontPack(const Path& font_path, const fast_vector<FontSize>& sizes, u32 texture_w = 2048);
+        FontPack(const Path& font_path, const fast_vector<FontSize>& sizes, u32 texture_w = 2048, u32 texture_id = InvalidId());
         ~FontPack();
 
 
@@ -35,13 +35,19 @@ namespace grynca {
 
         bool loadFont(const Path& font_path, const fast_vector<FontSize>& sizes, u32 texture_w = 2048);
 
-        const std::string& getCharsToLoad()const;
+        const fast_vector<c8>& getCharsToLoad()const;
+        void setCharsToLoad(const fast_vector<c8>& chtl);
         void setCharsToLoad(const std::string& chtl);
         Image::Ref getPackImage();
+
+        // can set/get texture id for some purposes
+        u32 getTextureId()const { return texture_id_; }
+        void setTextureId(u32 tid) { texture_id_ = tid; }
     private:
-        std::string chars_to_load_;
+        fast_vector<c8> chars_to_load_;
         Font* font_;
         Image::Ref pack_image_;
+        u32 texture_id_;
     };
 
 }

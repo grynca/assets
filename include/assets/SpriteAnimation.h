@@ -8,7 +8,6 @@ namespace grynca {
 
     // fw
     class SpriteAnimations;
-    class SpriteAnimationState;
 
     class SpriteAnimationFrame {
     public:
@@ -31,14 +30,13 @@ namespace grynca {
 
     class SpriteAnimation : public ManagedItem<SpriteAnimations> {
     public:
-        typedef std::function<void(SpriteAnimationFrame&, SpriteAnimationState&)> FrameChangedCallback;
-
         SpriteAnimation();
         SpriteAnimation& setFrames(const fast_vector<SpriteAnimationFrame>& frames);
 
 
         u32 getFramesCount()const;
-        SpriteAnimationFrame& getFrame(u32 frame_id);
+        const SpriteAnimationFrame& getFrame(u32 frame_id)const ;
+        SpriteAnimationFrame& accFrame(u32 frame_id);
     private:
 
         fast_vector<SpriteAnimationFrame> frames_;

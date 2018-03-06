@@ -63,8 +63,8 @@ namespace grynca {
         return glyphs_[charcode] != NULL;
     }
 
-    inline std::string SizedFont::getCharcodes()const {
-        std::string charcodes_out;
+    inline ustring SizedFont::getCharcodes()const {
+        ustring charcodes_out;
         for (unsigned char i=0; i<glyphs_.size(); ++i) {
             if (glyphs_[i])
                 charcodes_out.push_back(i);
@@ -90,7 +90,7 @@ namespace grynca {
     }
 
 
-    inline Font::Font(const std::string& fontname)
+    inline Font::Font(const ustring& fontname)
      : fontname_(fontname)
     {}
 
@@ -109,12 +109,12 @@ namespace grynca {
     }
 
     inline SizedFont& Font::getSizedFont(u32 font_size) {
-        ASSERT_M(containsSizedFont(font_size), "Font size is not contained for " +fontname_);
+        ASSERT_M(containsSizedFont(font_size), U"Font size is not contained for " + fontname_);
         return *sizes_[font_size];
     }
 
     inline const SizedFont& Font::getSizedFont(u32 font_size)const {
-        ASSERT_M(containsSizedFont(font_size), "Font size is not contained for " +fontname_);
+        ASSERT_M(containsSizedFont(font_size), U"Font size is not contained for " +fontname_);
         return *sizes_[font_size];
     }
 
@@ -135,11 +135,11 @@ namespace grynca {
         return *sizes_[s];
     }
 
-    inline void Font::setFontname(const std::string& fontname) {
+    inline void Font::setFontname(const ustring& fontname) {
         fontname_ = fontname;
     }
 
-    inline const std::string& Font::getFontname()const {
+    inline const ustring& Font::getFontname()const {
         return fontname_;
     }
 

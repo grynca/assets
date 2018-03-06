@@ -2,17 +2,17 @@
 #include "FontPack.h"
 
 namespace grynca {
-    inline FontsPacks::FontsPacks(AssetsManager& am)
+    inline FontsPacks::FontsPacks(AssetsManagerBase& am)
      : manager_(&am)
     {}
 
-    inline AssetsManager& FontsPacks::getManager() {
+    inline AssetsManagerBase& FontsPacks::getManager() {
         return *manager_;
     }
 
     inline FontPack* FontsPacks::findByFontname(const std::string& fontname) {
         for (u32 i=0; i<getItemsCount(); ++i) {
-            FontPack* fp = getItemAtPos(i);
+            FontPack* fp = accItemAtPos(i);
             if (!fp || fp->isNull())
                 continue;
             if (fp->getFont().getFontname() == fontname)

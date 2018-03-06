@@ -7,16 +7,16 @@ namespace grynca {
 
     // fw
     class ImagesPack;
-    class AssetsManager;
+    class AssetsManagerBase;
 
     class ImagesPacks : public Manager<ImagesPack> {
     public:
-        ImagesPacks(AssetsManager& am) : manager_(&am) {}
+        ImagesPacks(AssetsManagerBase& am) : manager_(&am) {}
 
-        AssetsManager& getManager() { return *manager_; }
+        AssetsManagerBase& getManager() { return *manager_; }
 
     private:
-        AssetsManager* manager_;
+        AssetsManagerBase* manager_;
     };
 
 }

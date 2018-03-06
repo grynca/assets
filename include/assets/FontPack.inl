@@ -46,13 +46,15 @@ namespace grynca {
     }
 
     inline FontPack::FontPack()
-     : chars_to_load_(" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"),
-       font_(NULL)
-    {}
+     : font_(NULL), texture_id_(InvalidId())
+    {
+        setCharsToLoad(" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~");
+    }
 
-    inline FontPack::FontPack(const Path& font_path, const fast_vector<FontSize>& sizes, u32 texture_w)
+    inline FontPack::FontPack(const Path& font_path, const fast_vector<FontSize>& sizes, u32 texture_w, u32 texture_id)
      : FontPack()
     {
+        texture_id_ = texture_id;
         loadFont(font_path, sizes, texture_w);
     }
 
@@ -81,9 +83,7 @@ namespace grynca {
             std::cerr << "[FontPack::loadFont]: " << font_path.getPath() << " " << getFreeTypeErrorMsg(error) << std::endl;
             return false;
         }
-        Path p = font_path;
-        p.removeExtension();
-        std::string fontname = p.getFilename();
+        ustring fontname = font_path.getFilenameWOExtension();
 
         if (font_)
             delete font_;
@@ -153,8 +153,9 @@ namespace grynca {
                         FT_UInt prev_glyph_index = FT_Get_Char_Index(ft.face, (u32)prev_glyph.getCharcode());
                         // kerning when prev_glyph is on left
                         FT_Get_Kerning( ft.face, prev_glyph_index, glyph_index, FT_KERNING_UNFITTED, &kerning );
-                        if(kerning.x)
+                        if(kerning.x) {
                             prev_glyph.addKerning(Kerning{chars_to_load_[i], (f32)kerning.x/(f32)HRES});
+                        }
 
                         if (prev_glyph_index != glyph_index) {
                             // only when glyphs are different add the other way around
@@ -183,12 +184,17 @@ namespace grynca {
         return true;
     }
 
-    inline const std::string&FontPack::getCharsToLoad()const {
-        return chars_to_load_;
+    inline const fast_vector<c8>& FontPack::getCharsToLoad()const {
+    return chars_to_load_;
+    }
+
+    inline void FontPack::setCharsToLoad(const fast_vector<c8>& chtl) {
+        chars_to_load_ = chtl;
     }
 
     inline void FontPack::setCharsToLoad(const std::string& chtl) {
-        chars_to_load_ = chtl;
+        chars_to_load_.resize(chtl.size());
+        std::copy(chtl.begin(), chtl.end(), chars_to_load_.begin());
     }
 
     inline Image::Ref FontPack::getPackImage() {

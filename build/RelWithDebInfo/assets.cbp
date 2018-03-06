@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="assets"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/grynca/DEV/gamedev/assets/build/RelWithDebInfo"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/grynca/DEV/gamedev/assets/build/RelWithDebInfo/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/grynca/DEV/gamedev/assets/build/RelWithDebInfo/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/grynca/DEV/gamedev/assets/build/RelWithDebInfo/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/grynca/DEV/gamedev/assets/build/RelWithDebInfo/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/grynca/DEV/gamedev/assets/build/RelWithDebInfo"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/grynca/DEV/gamedev/assets/build/RelWithDebInfo/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/grynca/DEV/gamedev/assets/build/RelWithDebInfo/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/grynca/DEV/gamedev/assets/build/RelWithDebInfo/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/grynca/DEV/gamedev/assets/build/RelWithDebInfo/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/grynca/DEV/gamedev/assets/build/RelWithDebInfo"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/grynca/DEV/gamedev/assets/build/RelWithDebInfo/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/grynca/DEV/gamedev/assets/build/RelWithDebInfo/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/grynca/DEV/gamedev/assets/build/RelWithDebInfo/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/grynca/DEV/gamedev/assets/build/RelWithDebInfo/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="assets">
+				<Option output="/home/grynca/DEV/gamedev/assets/build/RelWithDebInfo/assets" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/grynca/DEV/gamedev/assets/build/RelWithDebInfo"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/grynca/DEV/gamedev/base/include"/>
+					<Add directory="/home/grynca/DEV/gamedev/maths/include"/>
+					<Add directory="/usr/include/freetype2"/>
+					<Add directory="/home/grynca/DEV/gamedev/assets/include"/>
+					<Add directory="/usr/include/c++/5"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/5"/>
+					<Add directory="/usr/include/c++/5/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/grynca/DEV/gamedev/assets/build/RelWithDebInfo/Makefile&quot;  VERBOSE=1 assets"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/grynca/DEV/gamedev/assets/build/RelWithDebInfo/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/grynca/DEV/gamedev/assets/build/RelWithDebInfo/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/grynca/DEV/gamedev/assets/build/RelWithDebInfo/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="assets/fast">
+				<Option output="/home/grynca/DEV/gamedev/assets/build/RelWithDebInfo/assets" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/grynca/DEV/gamedev/assets/build/RelWithDebInfo"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/grynca/DEV/gamedev/base/include"/>
+					<Add directory="/home/grynca/DEV/gamedev/maths/include"/>
+					<Add directory="/usr/include/freetype2"/>
+					<Add directory="/home/grynca/DEV/gamedev/assets/include"/>
+					<Add directory="/usr/include/c++/5"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/5"/>
+					<Add directory="/usr/include/c++/5/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/grynca/DEV/gamedev/assets/build/RelWithDebInfo/Makefile&quot;  VERBOSE=1 assets/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/grynca/DEV/gamedev/assets/build/RelWithDebInfo/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/grynca/DEV/gamedev/assets/build/RelWithDebInfo/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/grynca/DEV/gamedev/assets/build/RelWithDebInfo/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/grynca/DEV/gamedev/assets/include/assets.h">
+			<Option target="assets"/>
+		</Unit>
+		<Unit filename="/home/grynca/DEV/gamedev/assets/include/assets/AssetsManagerBase.h">
+			<Option target="assets"/>
+		</Unit>
+		<Unit filename="/home/grynca/DEV/gamedev/assets/include/assets/AssetsManagerBase.inl">
+			<Option target="assets"/>
+		</Unit>
+		<Unit filename="/home/grynca/DEV/gamedev/assets/include/assets/Font.h">
+			<Option target="assets"/>
+		</Unit>
+		<Unit filename="/home/grynca/DEV/gamedev/assets/include/assets/Font.inl">
+			<Option target="assets"/>
+		</Unit>
+		<Unit filename="/home/grynca/DEV/gamedev/assets/include/assets/FontPack.h">
+			<Option target="assets"/>
+		</Unit>
+		<Unit filename="/home/grynca/DEV/gamedev/assets/include/assets/FontPack.inl">
+			<Option target="assets"/>
+		</Unit>
+		<Unit filename="/home/grynca/DEV/gamedev/assets/include/assets/FontsPacks.h">
+			<Option target="assets"/>
+		</Unit>
+		<Unit filename="/home/grynca/DEV/gamedev/assets/include/assets/FontsPacks.inl">
+			<Option target="assets"/>
+		</Unit>
+		<Unit filename="/home/grynca/DEV/gamedev/assets/include/assets/Image.h">
+			<Option target="assets"/>
+		</Unit>
+		<Unit filename="/home/grynca/DEV/gamedev/assets/include/assets/Image.inl">
+			<Option target="assets"/>
+		</Unit>
+		<Unit filename="/home/grynca/DEV/gamedev/assets/include/assets/ImagesPack.h">
+			<Option target="assets"/>
+		</Unit>
+		<Unit filename="/home/grynca/DEV/gamedev/assets/include/assets/ImagesPack.inl">
+			<Option target="assets"/>
+		</Unit>
+		<Unit filename="/home/grynca/DEV/gamedev/assets/include/assets/ImagesPacks.h">
+			<Option target="assets"/>
+		</Unit>
+		<Unit filename="/home/grynca/DEV/gamedev/assets/include/assets/SkylinePacker.h">
+			<Option target="assets"/>
+		</Unit>
+		<Unit filename="/home/grynca/DEV/gamedev/assets/include/assets/SkylinePacker.inl">
+			<Option target="assets"/>
+		</Unit>
+		<Unit filename="/home/grynca/DEV/gamedev/assets/include/assets/SpriteAnimation.h">
+			<Option target="assets"/>
+		</Unit>
+		<Unit filename="/home/grynca/DEV/gamedev/assets/include/assets/SpriteAnimation.inl">
+			<Option target="assets"/>
+		</Unit>
+		<Unit filename="/home/grynca/DEV/gamedev/assets/include/assets/SpriteAnimations.h">
+			<Option target="assets"/>
+		</Unit>
+		<Unit filename="/home/grynca/DEV/gamedev/assets/include/assets/SpriteAnimations.inl">
+			<Option target="assets"/>
+		</Unit>
+		<Unit filename="/home/grynca/DEV/gamedev/assets/include/assets/TexturePacker.h">
+			<Option target="assets"/>
+		</Unit>
+		<Unit filename="/home/grynca/DEV/gamedev/assets/include/assets/TexturePacker.inl">
+			<Option target="assets"/>
+		</Unit>
+		<Unit filename="/home/grynca/DEV/gamedev/assets/include/assets/assets_config.h">
+			<Option target="assets"/>
+		</Unit>
+		<Unit filename="/home/grynca/DEV/gamedev/assets/include/assets/ftinclude.h">
+			<Option target="assets"/>
+		</Unit>
+		<Unit filename="/home/grynca/DEV/gamedev/assets/test/main.cpp">
+			<Option target="assets"/>
+		</Unit>
+		<Unit filename="/home/grynca/DEV/gamedev/assets/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

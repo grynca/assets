@@ -48,7 +48,7 @@ namespace grynca {
     inline void TexturePacker::clear() {
         for (u32 i=0; i<region_data_.size(); ++i) {
             if (data_owned_[i])
-                delete region_data_[i];
+                delete[] region_data_[i];
         }
         region_data_.clear();
         data_owned_.clear();

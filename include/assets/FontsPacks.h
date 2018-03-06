@@ -7,15 +7,15 @@ namespace grynca {
 
     // fw
     class FontPack;
-    class AssetsManager;
+    class AssetsManagerBase;
 
     class FontsPacks : public Manager<FontPack> {
     public:
-        FontsPacks(AssetsManager& am);
-        AssetsManager& getManager();
+        FontsPacks(AssetsManagerBase& am);
+        AssetsManagerBase& getManager();
         FontPack* findByFontname(const std::string& fontname);
     private:
-        AssetsManager* manager_;
+        AssetsManagerBase* manager_;
     };
 }
 

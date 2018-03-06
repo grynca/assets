@@ -14,10 +14,10 @@ namespace grynca {
 
     class ImagesPack : public ManagedItem<ImagesPacks> {
     public:
-        typedef std::unordered_map<std::string, TextureRegion> Regions;
+        typedef std::unordered_map<ustring, TextureRegion, Hasher<ustring> > Regions;
 
         ImagesPack();
-        ImagesPack(const DirPath& dir_path, GLenum format, u32 texture_w = 2048);     // loads dir immediatelly
+        ImagesPack(const DirPath& dir_path, GLenum format, u32 texture_w = 2048, u32 texture_id = InvalidId());     // loads dir immediatelly
 
         bool isNull();
         Image::Ref getPackImage();
@@ -32,6 +32,9 @@ namespace grynca {
         bool loadDir(const DirPath& dir_path, GLenum format, u32 texture_w = 2048);
 
         const Regions& getRegions()const;
+
+        u32 getTextureId()const { return texture_id_; }
+        void setTextureId(u32 tid) { texture_id_ = tid; }
     private:
         struct ImgWithPadding {
             ImgWithPadding(Image* img) : image(img), left(0), top(0), right(0), bottom(0) {}
@@ -48,6 +51,7 @@ namespace grynca {
 
         Image::Ref pack_image_;
         Regions regions_;
+        u32 texture_id_;
     };
 
 }

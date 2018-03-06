@@ -15,26 +15,31 @@ IF (CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
     ENDIF()
 ENDIF()
 
-include_directories(include/)
+option(USE_SDL2 "Use SDL2" ON)
+IF (USE_SDL2)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUSE_SDL2=1" )
+    IF (WIN32)
+        set(LIBS "-lglew32 -lmingw32 -lSDL2main -lSDL2")
+    ELSE()
+        set(LIBS "-lGLEW -lGL -lGLU -lSDL2")
+    ENDIF()
+ENDIF()
+
+
 IF (WIN32)
     include_directories(c:/DEV/gamedev/base/include/)
     include_directories(c:/DEV/gamedev/maths/include/)
-    include_directories(c:/DEV/libs/mingw/glm/)
-    include_directories(c:/DEV/libs/mingw/glew-1.13.0/include/)
-    link_directories(c:/DEV/libs/mingw/glew-1.13.0/lib/)
-    include_directories(c:/DEV/libs/mingw/freetype-2.6/include/)
-    link_directories(c:/DEV/libs/mingw/freetype-2.6/lib/)
-    include_directories(c:/DEV/libs/mingw/SDL2-2.0.4/x86/include/)
-    link_directories(c:/DEV/libs/mingw/SDL2-2.0.4/x86/lib)
 
-    set(LIBS "-lfreetype -lglew32 -lmingw32 -lSDL2main -lSDL2 -lSDL2_image")
+    set(LIBS "${LIBS} -lfreetype -lSDL2_image")
 ELSE()
     include_directories(/home/grynca/DEV/gamedev/base/include/)
     include_directories(/home/grynca/DEV/gamedev/maths/include/)
     include_directories(/usr/include/freetype2)
 
-    set(LIBS "-lfreetype -lSDL2 -lSDL2_image")
+    set(LIBS "${LIBS} -lfreetype -lSDL2_image")
 ENDIF()
+
+include_directories(include/)
 
 
 set(SOURCE_FILES
@@ -58,8 +63,8 @@ set(SOURCE_FILES
         include/assets/Font.inl
         include/assets/SpriteAnimation.h
         include/assets/SpriteAnimation.inl
-        include/assets/AssetsManager.h
-        include/assets/AssetsManager.inl
+        include/assets/AssetsManagerBase.h
+        include/assets/AssetsManagerBase.inl
         include/assets/SpriteAnimations.h
         include/assets/SpriteAnimations.inl
         include/assets/FontsPacks.h

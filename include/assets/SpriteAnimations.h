@@ -7,18 +7,18 @@
 namespace grynca {
 
     // fw
-    class AssetsManager;
+    class AssetsManagerBase;
     class SpriteAnimation;
 
 
     class SpriteAnimations : public Manager<SpriteAnimation>
     {
     public:
-        SpriteAnimations(AssetsManager& am);
+        SpriteAnimations(AssetsManagerBase& am);
 
-        AssetsManager& getManager();
+        AssetsManagerBase& getManager();
     private:
-        AssetsManager* manager_;
+        AssetsManagerBase* manager_;
     };
 }
 

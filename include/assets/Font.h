@@ -86,7 +86,7 @@ namespace grynca {
 
         bool containsGlyph(char charcode)const;
 
-        std::string getCharcodes()const;     // gets charcodes for which glyphs are contained
+        ustring getCharcodes()const;     // gets charcodes for which glyphs are contained
         Glyph& getGlyph(char charcode);
         const Glyph& getGlyph(char charcode)const;
         Glyph& addGlyph(char charcode, const ARect& region,
@@ -101,7 +101,7 @@ namespace grynca {
 
     class Font {
     public:
-        Font(const std::string& fontname = "");
+        Font(const ustring& fontname = "");
         ~Font();
 
         bool containsSizedFont(u32 font_size)const;
@@ -110,10 +110,10 @@ namespace grynca {
         fast_vector<u32> getSizes()const;
         SizedFont& addSize(size_t s);
 
-        void setFontname(const std::string& fontname);
-        const std::string& getFontname()const;
+        void setFontname(const ustring& fontname);
+        const ustring& getFontname()const;
     private:
-        std::string fontname_;
+        ustring fontname_;
         fast_vector<SizedFont*> sizes_;      // indexed with size
     };
 

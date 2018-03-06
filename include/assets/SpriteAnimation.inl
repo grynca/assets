@@ -1,5 +1,5 @@
 #include "SpriteAnimation.h"
-#include "AssetsManager.h"
+#include "AssetsManagerBase.h"
 #include "assets/ImagesPack.h"
 
 namespace grynca {
@@ -40,13 +40,13 @@ namespace grynca {
             frames_[i].frame_id_ = i;
         }
 
-        AssetsManager& mgr = getManager().getManager();
+        AssetsManagerBase& mgr = getManager().getManager();
 
         // find pack where is first frame
         ImagesPack* pack = NULL;
         u32 j;
         for (j=0; j<mgr.getImagesPacks().getItemsCount(); ++j) {
-            pack = mgr.getImagesPacks().getItemAtPos(j);
+            pack = mgr.getImagesPacks().accItemAtPos(j);
             if (!pack)
                 continue;
             ImagesPack::Regions::const_iterator it = pack->getRegions().find(frames_[0].getImagePath());
@@ -71,7 +71,11 @@ namespace grynca {
         return u32(frames_.size());
     }
 
-    inline SpriteAnimationFrame& SpriteAnimation::getFrame(u32 frame_id) {
+    inline const SpriteAnimationFrame& SpriteAnimation::getFrame(u32 frame_id)const  {
+        return frames_[frame_id];
+    }
+
+    inline SpriteAnimationFrame& SpriteAnimation::accFrame(u32 frame_id) {
         return frames_[frame_id];
     }
 }
